@@ -27,4 +27,5 @@ En tant qu'utilisateur, je souhaite accéder facilement à mes listes d'armées,
         - Les optimisations sont affichés individuellement et on peut allé d'une optimisations à l'autre avec un défilement par la droite ou la gauche.
         - Les domaines sont afffichés sous la forme de liste dont chaque élément (sort, prière, etc) est ciquable pour accéder aux informations.
         - Les chartes sont affichés sous la forme de liste, on peut cliquer sur une charte pour accéder à ses informations.
-        - Chaque chartes contient les données de l'unité en question ainsi qu'une image de l'unité. 
+        - Chaque charte contient les données de l'unité en question ainsi qu'une image de l'unité. 
+        - Un bouton permet d'afficher les chartes par régiment, ou non. 
