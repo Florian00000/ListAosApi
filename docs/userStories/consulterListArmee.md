@@ -25,7 +25,7 @@ En tant qu'utilisateur, je souhaite accéder facilement à mes listes d'armées,
     - Crritères d'acceptation:
         - Un menu d'accès rapide permet de naviguer facilement entres les optimisations, domaines, chartes.
         - Les optimisations sont affichés individuellement et on peut allé d'une optimisations à l'autre avec un défilement par la droite ou la gauche.
-        - Les domaines sont afffichés sous la forme de liste dont chaque élément (sort, prière, etc) est ciquable pour accéder aux informations.
+        - Les domaines sont afffichés sous la forme de liste dont chaque élément (sort, prière, etc) est cliquable pour accéder aux informations.
         - Les chartes sont affichés sous la forme de liste, on peut cliquer sur une charte pour accéder à ses informations.
-        - Chaque charte contient les données de l'unité en question ainsi qu'une image de l'unité. 
+        - Chaque charte contient les données de l'unité en question ainsi qu'une image de l'unitée. 
         - Un bouton permet d'afficher les chartes par régiment, ou non. 
