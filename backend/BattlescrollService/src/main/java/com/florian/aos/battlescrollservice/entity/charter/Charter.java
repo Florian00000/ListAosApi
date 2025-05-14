@@ -13,18 +13,21 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "type_charter")
 
-public class Charter {
+public abstract class Charter {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_charter")
-    private int id;
+    protected Long id;
 
     @Column(nullable = false)
-    private String name;
-    private String imagePath;
+    protected String name;
+    @Column(name = "image_path")
+    protected String imagePath;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "version_name")
-    private Version version;
+    protected Version version;
 }
