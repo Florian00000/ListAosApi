@@ -30,4 +30,12 @@ public class RenownedRegiment extends Charter {
             inverseJoinColumns = @JoinColumn(name = "id_faction")
     )
     private List<Faction> factions;
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "organize",
+            joinColumns = @JoinColumn(name = "id_renowned"),
+            inverseJoinColumns = @JoinColumn(name = "id_unity")
+    )
+    private List<Unity> units;
 }
