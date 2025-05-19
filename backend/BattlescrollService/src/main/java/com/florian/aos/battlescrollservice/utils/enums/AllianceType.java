@@ -4,5 +4,6 @@ public enum AllianceType {
     ORDER,
     DESTRUCTION,
     DEATH,
-    CHAOS
+    CHAOS,
+    GENERAL
 }
