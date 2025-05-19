@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(name = "uc_version_name", columnNames = "version_name"))
 public class Version {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
