@@ -19,20 +19,20 @@ import java.util.List;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type_charter")
-
+@Table(uniqueConstraints = @UniqueConstraint(name = "uc_charter_name", columnNames = "name"))
 public abstract class Charter {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_charter")
     protected Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     protected String name;
     @Column(name = "image_path")
     protected String imagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "version_name")
+    @JoinColumn(name = "version_id")
     protected Version version;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)

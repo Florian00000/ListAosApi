@@ -11,21 +11,31 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @ControllerAdvice
 public class GeneralExceptionHandler {
 
+    private final ConstraintMessageResolver resolver;
+
+    public GeneralExceptionHandler(ConstraintMessageResolver resolver) {
+        this.resolver = resolver;
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorDto> handleDataIntegrityViolationException(DataIntegrityViolationException e, HttpServletRequest request) {
         log.error("Integrity constraint error detected", request.getRequestURI(), e.getMessage(), e);
 
         String errorMessage = e.getMessage();
-        if (errorMessage != null && errorMessage.contains("uc_version_name")) {
-            return buildErrorResponse(
-                    "This Version name is already used", HttpStatus.CONFLICT, request.getRequestURI()
-            );
+        if (errorMessage != null) {
+
+            Optional<String> messageOpt = resolver.resolveMessage(errorMessage);
+            if (messageOpt.isPresent()) {
+                return buildErrorResponse(messageOpt.get(), HttpStatus.CONFLICT, request.getRequestURI());
+            }
+
         }
         return buildErrorResponse("Violation of integrity constraints.", HttpStatus.BAD_REQUEST, request.getRequestURI());
     }

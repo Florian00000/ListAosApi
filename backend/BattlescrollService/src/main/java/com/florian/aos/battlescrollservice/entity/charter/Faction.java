@@ -18,11 +18,12 @@ import java.util.List;
 @DiscriminatorValue("FACTION")
 public class Faction extends Charter{
 
-    @Column(unique=true, nullable=false)
-    private String name;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AllianceType alliance;
+
+    @OneToMany(mappedBy = "faction")
+    private List<Unity> unityList;
 
     @ManyToMany(mappedBy = "factions")
     private List<RenownedRegiment> renownedRegiments;

@@ -28,6 +28,10 @@ public class Unity extends Charter{
     @Column(nullable = false)
     private int points;
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "faction_id")
+    private Faction faction;
+
     @OneToMany(mappedBy = "unity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Weapon> weapons;
 
