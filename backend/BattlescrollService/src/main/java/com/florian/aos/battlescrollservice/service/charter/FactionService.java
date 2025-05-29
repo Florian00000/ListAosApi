@@ -8,10 +8,12 @@ import com.florian.aos.battlescrollservice.exception.NotFoundException;
 import com.florian.aos.battlescrollservice.factory.CharterFactory;
 import com.florian.aos.battlescrollservice.repository.VersionRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
+import com.florian.aos.battlescrollservice.repository.charter.FactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.florian.aos.battlescrollservice.utils.StaticMethods.saveImage;
 import static com.florian.aos.battlescrollservice.utils.StaticMethods.saveImageBase64;
@@ -22,11 +24,17 @@ public class FactionService {
     private final CharterRepository charterRepository;
     private final CharterFactory charterFactory;
     private final VersionRepository versionRepository;
+    private final FactionRepository factionRepository;
 
-    public FactionService(CharterRepository charterRepository, CharterFactory charterFactory, VersionRepository versionRepository) {
+    public FactionService(CharterRepository charterRepository,
+                          CharterFactory charterFactory,
+                          VersionRepository versionRepository,
+                          FactionRepository factionRepository
+                          ) {
         this.charterRepository = charterRepository;
         this.charterFactory = charterFactory;
         this.versionRepository = versionRepository;
+        this.factionRepository = factionRepository;
     }
 
     private Faction prepareFaction (FactionDtoPost dto){
@@ -61,5 +69,15 @@ public class FactionService {
 
         charterRepository.save(faction);
         return new FactionDtoGet(faction);
+    }
+
+    public FactionDtoGet getFaction(Long id){
+        Faction faction = factionRepository.findById(id).orElseThrow(() -> new NotFoundException("Faction"));
+        return new FactionDtoGet(faction);
+    }
+
+    public List<FactionDtoGet> getAllFactions(){
+        List<Faction> factions = (List<Faction>) factionRepository.findAll();
+        return factions.stream().map(FactionDtoGet::new).toList();
     }
 }

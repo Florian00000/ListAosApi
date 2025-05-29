@@ -7,6 +7,7 @@ import com.florian.aos.battlescrollservice.exception.NotFoundException;
 import com.florian.aos.battlescrollservice.factory.CharterFactory;
 import com.florian.aos.battlescrollservice.repository.VersionRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
+import com.florian.aos.battlescrollservice.repository.charter.FactionRepository;
 import com.florian.aos.battlescrollservice.service.charter.FactionService;
 import com.florian.aos.battlescrollservice.utils.enums.AllianceType;
 import org.junit.jupiter.api.Assertions;
@@ -22,11 +23,12 @@ public class FactionServiceTest {
     private final CharterRepository charterRepository = Mockito.mock(CharterRepository.class);
     private CharterFactory charterFactory;
     private final VersionRepository versionRepository  = Mockito.mock(VersionRepository.class);
+    private final FactionRepository factionRepository = Mockito.mock(FactionRepository.class);
 
     @BeforeEach
     public void setUp() {
         charterFactory = new CharterFactory();
-        fs = new FactionService(charterRepository, charterFactory, versionRepository);
+        fs = new FactionService(charterRepository, charterFactory, versionRepository, factionRepository);
     }
 
     @Test
@@ -81,6 +83,11 @@ public class FactionServiceTest {
 
         //assert
         Mockito.verify(charterRepository, Mockito.times(1)).save(Mockito.any(Faction.class));
+    }
+
+    @Test
+    public void GivenGetFaction_WhenIdNotExist_ThenThrowException() {
+        Assertions.assertThrows(NotFoundException.class, () -> fs.getFaction(1L));
     }
 
 }
