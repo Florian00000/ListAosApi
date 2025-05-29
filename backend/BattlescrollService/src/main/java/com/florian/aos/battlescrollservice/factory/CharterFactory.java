@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 public class CharterFactory {
 
     public Faction fromDto(FactionDtoPost dto, Version version){
+        if (dto.getName() == null || dto.getName().isBlank()){
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+
         Faction faction = Faction
                 .builder()
                 .name(dto.getName())
@@ -21,7 +25,6 @@ public class CharterFactory {
         }catch (IllegalArgumentException e){
             throw new IllegalArgumentException("Illegal alliance type " + dto.getAlliance());
         }
-        faction.setVersion(version);
         return faction;
     }
 }

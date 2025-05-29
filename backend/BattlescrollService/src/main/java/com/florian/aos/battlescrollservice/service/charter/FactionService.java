@@ -1,4 +1,4 @@
-package com.florian.aos.battlescrollservice.service;
+package com.florian.aos.battlescrollservice.service.charter;
 
 import com.florian.aos.battlescrollservice.dto.faction.FactionDtoGet;
 import com.florian.aos.battlescrollservice.dto.faction.FactionDtoPost;
@@ -11,13 +11,13 @@ import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CharterService {
+public class FactionService {
 
     private final CharterRepository charterRepository;
     private final CharterFactory charterFactory;
     private final VersionRepository versionRepository;
 
-    public CharterService(CharterRepository charterRepository, CharterFactory charterFactory, VersionRepository versionRepository) {
+    public FactionService(CharterRepository charterRepository, CharterFactory charterFactory, VersionRepository versionRepository) {
         this.charterRepository = charterRepository;
         this.charterFactory = charterFactory;
         this.versionRepository = versionRepository;
