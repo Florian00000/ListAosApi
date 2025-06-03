@@ -148,6 +148,34 @@ public class FactionServiceTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> fs.updateFaction(1l,factionDtoPost));
     }
 
+    @Test
+    public void GivenUpdateFaction_ThenUpdateFaction(){
+        //arrange
+        FactionDtoPost factionDtoPost = FactionDtoPost
+                .builder()
+                .name("Faction Name")
+                .version("v4")
+                .alliance("death")
+                .build();
+        Version version = Version.builder().name("v4").build();
+        Faction oldFaction = Faction.builder().id(1L).build();
+        Faction faction = Faction.builder()
+                .id(1L)
+                .name("Faction Name")
+                .version(version)
+                .alliance(AllianceType.DEATH)
+                .build();
+
+        Mockito.when(versionRepository.findByName("v4")).thenReturn(Optional.of(version));
+        Mockito.when(factionRepository.findById(1L)).thenReturn(Optional.of(oldFaction));
+
+        //act
+        fs.updateFaction(1L,factionDtoPost);
+
+        //assert
+        Mockito.verify(factionRepository, Mockito.times(1)).save(Mockito.any(Faction.class));
+    }
+
 }
 
 

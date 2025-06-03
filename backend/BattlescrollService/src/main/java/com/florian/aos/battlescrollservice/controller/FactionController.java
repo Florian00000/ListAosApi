@@ -41,4 +41,17 @@ public class FactionController {
             @RequestPart("image") MultipartFile image) {
         return ResponseEntity.status(201).body(factionService.addFaction(factionDtoPost, image));
     }
+
+    @PutMapping("/update/{factionId}")
+    public ResponseEntity<FactionDtoGet> updateFaction(@PathVariable Long factionId,
+                                                       @RequestBody FactionDtoPost factionDtoPost) {
+        return ResponseEntity.status(200).body(factionService.updateFaction(factionId, factionDtoPost));
+    }
+
+    @PutMapping(value = "/update/{factionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<FactionDtoGet> updateFaction(@PathVariable Long factionId,
+                                                       @RequestPart("faction") FactionDtoPost factionDtoPost,
+                                                       @RequestPart("image") MultipartFile image){
+        return ResponseEntity.status(200).body(factionService.updateFaction(factionId, factionDtoPost, image));
+    }
 }

@@ -10,6 +10,7 @@ import com.florian.aos.battlescrollservice.repository.VersionRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
 import com.florian.aos.battlescrollservice.repository.charter.FactionRepository;
 import com.florian.aos.battlescrollservice.service.ImageStorageService;
+import com.florian.aos.battlescrollservice.utils.enums.AllianceType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,13 +72,42 @@ public class FactionService {
     }
 
     public FactionDtoGet updateFaction(Long id, FactionDtoPost factionDtoPost){
-        Faction faction = factionRepository.findById(id).orElseThrow(() -> new NotFoundException("Faction"));
-        Faction factionToUpdate = prepareFaction(factionDtoPost);
 
-        return null;
+        Faction existingFaction = prepareFactionToUpdate(id, factionDtoPost);
+        if(existingFaction.getImagePath() != null && !existingFaction.getImagePath().isBlank()){
+            imageStorageService.deleteImage(existingFaction.getImagePath());
+        }
+
+        existingFaction.setImagePath(imageStorageService.saveImageToCharter(existingFaction).getImagePath());
+        factionRepository.save(existingFaction);
+        return new FactionDtoGet(existingFaction);
     }
 
+    public FactionDtoGet updateFaction(Long id, FactionDtoPost factionDtoPost, MultipartFile file){
 
+        Faction existingFaction = prepareFactionToUpdate(id, factionDtoPost);
+        if(existingFaction.getImagePath() != null && !existingFaction.getImagePath().isBlank()){
+            imageStorageService.deleteImage(existingFaction.getImagePath());
+        }
+        existingFaction.setImagePath(imageStorageService.saveImageToCharter(existingFaction, file).getImagePath());
+        factionRepository.save(existingFaction);
+        return new FactionDtoGet(existingFaction);
+    }
 
-
+    private Faction prepareFactionToUpdate(Long id, FactionDtoPost factionDtoPost) {
+        Faction existingFaction = factionRepository.findById(id).orElseThrow(() -> new NotFoundException("Faction"));
+        Version version = versionRepository.findByName(factionDtoPost.getVersion())
+                .orElseThrow(() -> new NotFoundException("Version " + factionDtoPost.getVersion()));
+        if (factionDtoPost.getName() == null || factionDtoPost.getName().isEmpty()){
+            throw new IllegalArgumentException("Name is null " );
+        }
+        existingFaction.setName(factionDtoPost.getName());
+        try {
+            existingFaction.setAlliance(AllianceType.valueOf(factionDtoPost.getAlliance().toUpperCase()));
+        }catch (IllegalArgumentException e){
+            throw new IllegalArgumentException("Illegal alliance type " + factionDtoPost.getAlliance());
+        }
+        existingFaction.setVersion(version);
+        return existingFaction;
+    }
 }

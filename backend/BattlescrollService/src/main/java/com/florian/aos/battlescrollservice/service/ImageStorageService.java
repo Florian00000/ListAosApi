@@ -36,6 +36,19 @@ public class ImageStorageService {
         return charter;
     }
 
+    public void deleteImage(String imagePath) {
+        String rootPath = System.getProperty("user.dir");
+        String directoryPath = rootPath + "/public/";
+        File file = new File(directoryPath + imagePath);
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            if (!deleted) {
+                throw new RuntimeException("Failed to delete image at path: " + imagePath);
+            }
+        }
+    }
+
+
     private String saveImageBase64(String imageInput) throws IOException {
         if(imageInput == null || imageInput.isBlank()){
             throw new IllegalArgumentException("Image input is null or empty");

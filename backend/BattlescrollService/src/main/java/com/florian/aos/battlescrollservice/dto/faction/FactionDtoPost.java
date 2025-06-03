@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FactionDtoPost {
-
     private String name;
     private String imagePath;
     private String version;
