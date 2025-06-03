@@ -8,6 +8,7 @@ import com.florian.aos.battlescrollservice.factory.CharterFactory;
 import com.florian.aos.battlescrollservice.repository.VersionRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
 import com.florian.aos.battlescrollservice.repository.charter.FactionRepository;
+import com.florian.aos.battlescrollservice.service.ImageStorageService;
 import com.florian.aos.battlescrollservice.service.charter.FactionService;
 import com.florian.aos.battlescrollservice.utils.enums.AllianceType;
 import org.junit.jupiter.api.Assertions;
@@ -24,11 +25,19 @@ public class FactionServiceTest {
     private CharterFactory charterFactory;
     private final VersionRepository versionRepository  = Mockito.mock(VersionRepository.class);
     private final FactionRepository factionRepository = Mockito.mock(FactionRepository.class);
+    private ImageStorageService imageStorageService;
 
     @BeforeEach
     public void setUp() {
         charterFactory = new CharterFactory();
-        fs = new FactionService(charterRepository, charterFactory, versionRepository, factionRepository);
+        imageStorageService = new ImageStorageService();
+        fs = new FactionService(charterRepository, charterFactory, versionRepository, factionRepository,
+                imageStorageService);
+    }
+
+    @Test
+    public void GivenGetFaction_WhenIdNotExist_ThenThrowException() {
+        Assertions.assertThrows(NotFoundException.class, () -> fs.getFaction(1L));
     }
 
     @Test
@@ -86,8 +95,57 @@ public class FactionServiceTest {
     }
 
     @Test
-    public void GivenGetFaction_WhenIdNotExist_ThenThrowException() {
+    public void GivenUpdateFaction_WhenIdNotExist_ThenThrowException() {
         Assertions.assertThrows(NotFoundException.class, () -> fs.getFaction(1L));
+    }
+
+    @Test
+    public void GivenUpdateFaction_WhenVersionNotExist_ThenThrowException() {
+        //arrange
+        FactionDtoPost factionDtoPost = FactionDtoPost
+                .builder()
+                .version("x")
+                .build();
+
+        //act & assert
+        Assertions.assertThrows(NotFoundException.class, () -> fs.updateFaction(1L,factionDtoPost));
+    }
+
+    @Test
+    public void GivenUpdateFaction_WhenNameIsNull_ThenThrowException() {
+        //arrange
+        FactionDtoPost factionDtoPost = FactionDtoPost
+                .builder()
+                .version("v4")
+                .alliance("death")
+                .build();
+        Faction oldFaction = Faction.builder().id(1L).build();
+        Version version = Version.builder().name("v4").build();
+        Mockito.when(versionRepository.findByName("v4")).thenReturn(Optional.of(version));
+        Mockito.when(factionRepository.findById(1L)).thenReturn(Optional.of(oldFaction));
+
+
+        //act & assert
+        Assertions.assertThrows(IllegalArgumentException.class, () -> fs.updateFaction(1l,factionDtoPost));
+    }
+
+    @Test
+    public void GivenUpdateFaction_WhenAllianceIsNotExist_ThenThrowException() {
+        //arrange
+        FactionDtoPost factionDtoPost = FactionDtoPost
+                .builder()
+                .name("Faction Name")
+                .version("v4")
+                .alliance("invalid")
+                .build();
+        Faction oldFaction = Faction.builder().id(1L).build();
+        Version version = Version.builder().name("v4").build();
+        Mockito.when(versionRepository.findByName("v4")).thenReturn(Optional.of(version));
+        Mockito.when(factionRepository.findById(1L)).thenReturn(Optional.of(oldFaction));
+
+
+        //act & assert
+        Assertions.assertThrows(IllegalArgumentException.class, () -> fs.updateFaction(1l,factionDtoPost));
     }
 
 }

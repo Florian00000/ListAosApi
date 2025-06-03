@@ -1,5 +1,7 @@
-package com.florian.aos.battlescrollservice.utils;
+package com.florian.aos.battlescrollservice.service;
 
+import com.florian.aos.battlescrollservice.entity.charter.Charter;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,9 +11,32 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.UUID;
 
-public class StaticMethods {
+@Service
+public class ImageStorageService {
 
-    public static String saveImageBase64(String imageInput) throws IOException {
+    public Charter saveImageToCharter (Charter charter) {
+        if (charter.getImagePath() != null) {
+            try {
+                String imagePath = saveImageBase64(charter.getImagePath());
+                charter.setImagePath(imagePath);
+            }catch (IOException e){
+                throw new IllegalArgumentException("Image path could not be saved");
+            }
+        }
+        return charter;
+    }
+
+    public Charter saveImageToCharter (Charter charter, MultipartFile imageFile) {
+        try {
+            String imagePath = saveImage(imageFile);
+            charter.setImagePath(imagePath);
+        }catch (IOException e){
+            throw new IllegalArgumentException("Image path could not be saved");
+        }
+        return charter;
+    }
+
+    private String saveImageBase64(String imageInput) throws IOException {
         if(imageInput == null || imageInput.isBlank()){
             throw new IllegalArgumentException("Image input is null or empty");
         }
@@ -41,7 +66,7 @@ public class StaticMethods {
         return "/images/" + filename;
     }
 
-    public static String saveImage(MultipartFile file) throws IOException {
+    private String saveImage(MultipartFile file) throws IOException {
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         if (originalFilename.contains("..")) {
             throw new IllegalArgumentException("Invalid file path");
