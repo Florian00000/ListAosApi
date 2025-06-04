@@ -110,7 +110,7 @@ jobs:
 
   latest:
     name: Build and Push Docker Image with tag latest
-    needs: deploy
+    needs: docker
     runs-on: ubuntu-latest
 
     steps:
