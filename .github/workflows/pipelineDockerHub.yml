@@ -122,7 +122,7 @@ jobs:
 
       - name: Pull previously pushed images
         run: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/}/battlescroll_service:${{ github.sha }}
+          docker pull ${{ secrets.DOCKER_USERNAME }}/battlescroll_service:${{ github.sha }}
 
       - name: Tag images with latest
         run: |
