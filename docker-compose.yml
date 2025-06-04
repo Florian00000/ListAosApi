@@ -1,0 +1,22 @@
+volumes:
+  list_aos_images:
+networks:
+  list_aos:
+
+services:
+   
+  battlescroll_service:
+    container_name: battlescroll_service
+    build:
+      context: ./backend/BattlescrollService
+      dockerfile: dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/${DB_NAME}?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - list_aos_images:/app/public/images
+    ports:
+      - "8080:8080"
+    networks:
+      - list_aos
