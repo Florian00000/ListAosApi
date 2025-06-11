@@ -4,7 +4,6 @@ import com.florian.aos.battlescrollservice.dto.faction.FactionDtoGet;
 import com.florian.aos.battlescrollservice.dto.faction.FactionDtoPost;
 import com.florian.aos.battlescrollservice.service.charter.FactionService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
