@@ -176,6 +176,19 @@ public class FactionServiceTest {
         Mockito.verify(factionRepository, Mockito.times(1)).save(Mockito.any(Faction.class));
     }
 
+    @Test
+    public void GivenDeleteFaction_ThenDeleteFaction(){
+        //arrange
+        Faction faction = Faction.builder().id(1L).build();
+        Mockito.when(factionRepository.findById(1L)).thenReturn(Optional.of(faction));
+
+        //act
+        fs.deleteFaction(1L);
+
+        //assert
+        Mockito.verify(factionRepository, Mockito.times(1)).delete(faction);
+    }
+
 }
 
 

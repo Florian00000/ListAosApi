@@ -110,4 +110,11 @@ public class FactionService {
         existingFaction.setVersion(version);
         return existingFaction;
     }
+
+    public boolean deleteFaction(Long id){
+        Faction faction = factionRepository.findById(id).orElseThrow(() -> new NotFoundException("Faction"));
+        imageStorageService.deleteImage(faction.getImagePath());
+        factionRepository.delete(faction);
+        return true;
+    }
 }

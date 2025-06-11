@@ -22,7 +22,7 @@ public class Faction extends Charter{
     @Column(nullable = false)
     private AllianceType alliance;
 
-    @OneToMany(mappedBy = "faction")
+    @OneToMany(mappedBy = "faction", cascade = CascadeType.REMOVE)
     private List<Unity> unityList;
 
     @ManyToMany(mappedBy = "factions")
