@@ -1,9 +1,8 @@
 package com.florian.aos.battlescrollservice.entity.battleAptitude;
 
 import com.florian.aos.battlescrollservice.entity.charter.Charter;
-import com.florian.aos.battlescrollservice.utils.enums.AptitudeType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+        import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,21 +19,21 @@ public class AptitudeContext {
     @Column(name = "id_aptitude_context")
     private Long id;
 
-    @Column(name = "aptitude_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private AptitudeType aptitudeType;
     @Column(nullable = false)
     private boolean isOptimisation;
-
+    @Column(nullable = false)
+    private boolean isUniversal;
+    @Column(nullable = false)
+    private boolean isEqualGames;
     private int points;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_charter")
+    @JoinColumn(name = "charter_id")
     private Charter charter;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_battle_aptitude")
+    @OneToOne(mappedBy = "aptitudeContext")
     private BattleAptitude battleAptitude;
 
-
+    @OneToOne(mappedBy = "aptitudeContext")
+    private Domain domain;
 }

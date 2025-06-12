@@ -1,6 +1,7 @@
 package com.florian.aos.battlescrollservice.entity.battleAptitude;
 
 import com.florian.aos.battlescrollservice.entity.Keyword;
+import com.florian.aos.battlescrollservice.utils.enums.AptitudeType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class BattleAptitude {
 
     @Column(nullable = false)
     protected String name;
+    @Column(name = "aptitude_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AptitudeType aptitudeType;
     @Column(nullable = false)
     protected String phase;
     @Column(nullable = false)
@@ -41,6 +45,7 @@ public class BattleAptitude {
     )
     protected List<Keyword> keywords;
 
-    @OneToMany(mappedBy = "battleAptitude")
-    protected List<AptitudeContext> aptitudeContextList;
+    @OneToOne
+    @JoinColumn(name = "aptitude_context_id" , referencedColumnName = "id_aptitude_context")
+    private AptitudeContext aptitudeContext;
 }
