@@ -26,6 +26,8 @@ public class AptitudeContext {
     @Column(nullable = false)
     private boolean isOptimisation;
 
+    private int points;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_charter")
     private Charter charter;
@@ -33,4 +35,6 @@ public class AptitudeContext {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_battle_aptitude")
     private BattleAptitude battleAptitude;
+
+
 }
