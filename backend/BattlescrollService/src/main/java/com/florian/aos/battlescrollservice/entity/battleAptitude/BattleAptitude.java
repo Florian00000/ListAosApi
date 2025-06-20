@@ -45,7 +45,7 @@ public class BattleAptitude {
     )
     protected List<Keyword> keywords;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "aptitude_context_id" , referencedColumnName = "id_aptitude_context")
     private AptitudeContext aptitudeContext;
 }
