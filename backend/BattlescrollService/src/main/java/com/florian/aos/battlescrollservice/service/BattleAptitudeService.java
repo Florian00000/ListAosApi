@@ -36,7 +36,6 @@ public class BattleAptitudeService {
         this.charterRepository = charterRepository;
     }
 
-    //TODO tester et faire le controller
     @Transactional
     public BattleAptitudeDtoGet addBattleAptitude (BattleAptitudeDtoPost dtoPost) {
         if (dtoPost.getAptitudeContext() == null){

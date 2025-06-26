@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class MagicPrayer extends BattleAptitude {
 
-    @Column(nullable = false, name = "launch_value")
+    @Column(name = "launch_value")
     private int launchValue;
 
     @ManyToOne

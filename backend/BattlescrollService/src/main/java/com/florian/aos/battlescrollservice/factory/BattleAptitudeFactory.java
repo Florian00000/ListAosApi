@@ -19,6 +19,7 @@ public class BattleAptitudeFactory {
         }
 
         BattleAptitude battleAptitude = BattleAptitude.builder()
+                .name(baDto.getName())
                 .phase(baDto.getPhase())
                 .description(baDto.getDescription())
                 .announcement(baDto.getAnnouncement())
