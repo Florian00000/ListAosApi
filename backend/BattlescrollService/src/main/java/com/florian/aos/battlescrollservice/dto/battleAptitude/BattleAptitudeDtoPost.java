@@ -1,10 +1,12 @@
 package com.florian.aos.battlescrollservice.dto.battleAptitude;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
 public class BattleAptitudeDtoPost {
 
     private String name;
