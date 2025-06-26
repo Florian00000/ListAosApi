@@ -2,6 +2,7 @@ package com.florian.aos.battlescrollservice;
 
 import com.florian.aos.battlescrollservice.dto.battleAptitude.AptitudeContextDtoPost;
 import com.florian.aos.battlescrollservice.dto.battleAptitude.BattleAptitudeDtoPost;
+import com.florian.aos.battlescrollservice.entity.Keyword;
 import com.florian.aos.battlescrollservice.exception.NotFoundException;
 import com.florian.aos.battlescrollservice.factory.BattleAptitudeFactory;
 import com.florian.aos.battlescrollservice.repository.KeywordRepository;
@@ -73,6 +74,55 @@ public class BattleAptitudeServiceTest {
                 .aptitudeContext(contextDtoPost)
                 .keywords(List.of("keyword")).build();
         Mockito.when(keywordRepository.findByName("keyword")).thenReturn(Optional.empty());
+
+        //act & assert
+        Assertions.assertThrows(NotFoundException.class, () -> service.addBattleAptitude(baDtoPost));
+    }
+
+    @Test
+    public void GivenAddBattleAptitude_WhenIsNotUniversalAndNoCharterId_ThenThrowException(){
+        //arrange
+        AptitudeContextDtoPost contextDtoPost = AptitudeContextDtoPost.builder()
+                .isOptimisation(true)
+                .isUniversal(false)
+                .isEqualGames(true)
+                .build();
+        BattleAptitudeDtoPost baDtoPost = BattleAptitudeDtoPost.builder()
+                .name("na")
+                .phase("passif")
+                .description("description")
+                .announcement("announcement")
+                .effect("effect")
+                .aptitudeType("artefact")
+                .aptitudeContext(contextDtoPost)
+                .keywords(List.of("keyword")).build();
+        Mockito.when(keywordRepository.findByName("keyword")).thenReturn(Optional.of(Keyword.builder().build()));
+
+
+        //act & assert
+        Assertions.assertThrows(IllegalArgumentException.class, () -> service.addBattleAptitude(baDtoPost));
+    }
+
+    @Test
+    public void GivenAddBattleAptitude_WhenIsNotUniversalAndCharterNotExist_ThenThrowException(){
+        //arrange
+        AptitudeContextDtoPost contextDtoPost = AptitudeContextDtoPost.builder()
+                .isOptimisation(true)
+                .isUniversal(false)
+                .isEqualGames(true)
+                .charterId(1L)
+                .build();
+        BattleAptitudeDtoPost baDtoPost = BattleAptitudeDtoPost.builder()
+                .name("na")
+                .phase("passif")
+                .description("description")
+                .announcement("announcement")
+                .effect("effect")
+                .aptitudeType("artefact")
+                .aptitudeContext(contextDtoPost)
+                .keywords(List.of("keyword")).build();
+        Mockito.when(keywordRepository.findByName("keyword")).thenReturn(Optional.of(Keyword.builder().build()));
+        Mockito.when(charterRepository.findById(1L)).thenReturn(Optional.empty());
 
         //act & assert
         Assertions.assertThrows(NotFoundException.class, () -> service.addBattleAptitude(baDtoPost));
