@@ -4,6 +4,9 @@ import com.florian.aos.battlescrollservice.entity.battleAptitude.AptitudeContext
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AptitudeContextRepository extends CrudRepository<AptitudeContext, Long> {
+    List<AptitudeContext> findAllByCharterNameIgnoreCase(String name);
 }

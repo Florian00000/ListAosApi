@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BattleAptitudeService {
@@ -47,6 +48,15 @@ public class BattleAptitudeService {
     public List<BattleAptitudeDtoGet> getAllBattleAptitudes(){
         List<BattleAptitude> battleAptitudes = (List<BattleAptitude>) battleAptitudeRepository.findAll();
         return battleAptitudes.stream().map(BattleAptitudeDtoGet::new).toList();
+    }
+
+    public List<BattleAptitudeDtoGet> getAllBattleAptitudesByCharterName(String charterName){
+        List<AptitudeContext> aptitudeContextList = aptitudeContextRepository.findAllByCharterNameIgnoreCase(charterName);
+        return aptitudeContextList.stream()
+                .map(battleAptitudeRepository::findByAptitudeContext)
+                .flatMap(Optional::stream)
+                .map(BattleAptitudeDtoGet::new)
+                .toList();
     }
 
     @Transactional

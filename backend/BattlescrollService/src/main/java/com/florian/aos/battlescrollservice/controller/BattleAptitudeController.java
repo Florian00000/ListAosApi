@@ -28,6 +28,11 @@ public class BattleAptitudeController {
         return ResponseEntity.ok(battleAptitudeService.getAllBattleAptitudes());
     }
 
+    @GetMapping("/find-by-charter-name/{charterName}")
+    public ResponseEntity<List<BattleAptitudeDtoGet>> getAllBattleAptitudesByCharterName(@PathVariable String charterName){
+        return ResponseEntity.ok(battleAptitudeService.getAllBattleAptitudesByCharterName(charterName));
+    }
+
     @PostMapping(value = "/add")
     public ResponseEntity<BattleAptitudeDtoGet> addBattleAptitude(@RequestBody BattleAptitudeDtoPost dtoPost){
         return ResponseEntity.status(201).body(battleAptitudeService.addBattleAptitude(dtoPost));

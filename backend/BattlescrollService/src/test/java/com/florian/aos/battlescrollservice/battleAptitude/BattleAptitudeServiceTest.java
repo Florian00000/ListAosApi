@@ -1,4 +1,4 @@
-package com.florian.aos.battlescrollservice;
+package com.florian.aos.battlescrollservice.battleAptitude;
 
 import com.florian.aos.battlescrollservice.dto.battleAptitude.AptitudeContextDtoPost;
 import com.florian.aos.battlescrollservice.dto.battleAptitude.BattleAptitudeDtoPost;
