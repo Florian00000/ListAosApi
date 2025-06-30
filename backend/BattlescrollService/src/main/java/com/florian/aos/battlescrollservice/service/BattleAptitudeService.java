@@ -11,8 +11,10 @@ import com.florian.aos.battlescrollservice.repository.KeywordRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.AptitudeContextRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.BattleAptitudeRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class BattleAptitudeService {
@@ -34,6 +36,17 @@ public class BattleAptitudeService {
         this.battleAptitudeFactory = battleAptitudeFactory;
         this.keywordRepository = keywordRepository;
         this.charterRepository = charterRepository;
+    }
+
+    public BattleAptitudeDtoGet getBattleAptitude(Long id){
+        BattleAptitude battleAptitude = battleAptitudeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Battle Aptitude"));
+        return new BattleAptitudeDtoGet(battleAptitude);
+    }
+
+    public List<BattleAptitudeDtoGet> getAllBattleAptitudes(){
+        List<BattleAptitude> battleAptitudes = (List<BattleAptitude>) battleAptitudeRepository.findAll();
+        return battleAptitudes.stream().map(BattleAptitudeDtoGet::new).toList();
     }
 
     @Transactional
