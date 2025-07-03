@@ -31,9 +31,9 @@ public class AptitudeContext {
     @JoinColumn(name = "charter_id")
     private Charter charter;
 
-    @OneToOne(mappedBy = "aptitudeContext")
+    @OneToOne(mappedBy = "aptitudeContext", cascade = CascadeType.REMOVE)
     private BattleAptitude battleAptitude;
 
-    @OneToOne(mappedBy = "aptitudeContext")
+    @OneToOne(mappedBy = "aptitudeContext" , cascade = CascadeType.REMOVE)
     private Domain domain;
 }

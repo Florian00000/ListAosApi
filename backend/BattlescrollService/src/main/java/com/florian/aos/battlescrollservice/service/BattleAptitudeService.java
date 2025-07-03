@@ -160,4 +160,11 @@ public class BattleAptitudeService {
             aptitudeContext.setCharter(charter);
         }
     }
+
+    public boolean deleteBattleAptitude(Long id){
+        BattleAptitude battleAptitude = battleAptitudeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("battle aptitude"));
+        battleAptitudeRepository.delete(battleAptitude);
+        return true;
+    }
 }
