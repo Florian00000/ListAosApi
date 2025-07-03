@@ -1,5 +1,6 @@
 package com.florian.aos.battlescrollservice.service;
 
+import com.florian.aos.battlescrollservice.dto.battleAptitude.AptitudeContextDtoPost;
 import com.florian.aos.battlescrollservice.dto.battleAptitude.BattleAptitudeDtoGet;
 import com.florian.aos.battlescrollservice.dto.battleAptitude.BattleAptitudeDtoPost;
 import com.florian.aos.battlescrollservice.entity.battleAptitude.AptitudeContext;
@@ -11,6 +12,7 @@ import com.florian.aos.battlescrollservice.repository.KeywordRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.AptitudeContextRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.BattleAptitudeRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
+import com.florian.aos.battlescrollservice.utils.enums.AptitudeType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,7 +79,7 @@ public class BattleAptitudeService {
             );
         }
 
-        if (!dtoPost.getAptitudeContext().isUniversal()){
+        if (!dtoPost.getAptitudeContext().getIsUniversal()){
             if (dtoPost.getAptitudeContext().getCharterId() != null && dtoPost.getAptitudeContext().getCharterId() != 0){
                 Charter charter = charterRepository.findById(dtoPost.getAptitudeContext().getCharterId())
                         .orElseThrow(() -> new NotFoundException("Charter"));
@@ -90,5 +92,72 @@ public class BattleAptitudeService {
         battleAptitude.setAptitudeContext(aptitudeContext);
         battleAptitudeRepository.save(battleAptitude);
         return new BattleAptitudeDtoGet(battleAptitude);
+    }
+
+    @Transactional
+    public BattleAptitudeDtoGet updateBattleAptitude(Long id, BattleAptitudeDtoPost baDtoPost){
+        BattleAptitude battleAptitude = battleAptitudeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Battle Aptitude"));
+
+        if (baDtoPost.getAptitudeContext() != null) {
+            if (battleAptitude.getAptitudeContext() == null) throw new NotFoundException("Context for Battle Aptitude");
+            AptitudeContext aptitudeContext = battleAptitude.getAptitudeContext();
+
+            AptitudeContextDtoPost contextDtoPost = baDtoPost.getAptitudeContext();
+            updateAptitudeContext(aptitudeContext, contextDtoPost);
+        }
+
+        if (baDtoPost.getName() != null && !baDtoPost.getName().isBlank()){
+            battleAptitude.setName(baDtoPost.getName());
+        }
+        if (baDtoPost.getAptitudeType() != null && !baDtoPost.getAptitudeType().isBlank()){
+            try {
+                battleAptitude.setAptitudeType(AptitudeType.valueOf(baDtoPost.getAptitudeType().toUpperCase()));
+            }catch (IllegalArgumentException e){
+                throw new IllegalArgumentException("Illegal aptitude type " + baDtoPost.getAptitudeType());
+            }
+        }
+        if (baDtoPost.getPhase() != null && !baDtoPost.getPhase().isBlank()){
+            battleAptitude.setPhase(baDtoPost.getPhase());
+        }
+        if (baDtoPost.getDescription() != null && !baDtoPost.getDescription().isBlank()){
+            battleAptitude.setDescription(baDtoPost.getDescription());
+        }
+        if (baDtoPost.getAnnouncement() != null && !baDtoPost.getAnnouncement().isBlank()){
+            battleAptitude.setAnnouncement(baDtoPost.getAnnouncement());
+        }
+        if (baDtoPost.getEffect() != null && !baDtoPost.getEffect().isBlank()){
+            battleAptitude.setEffect(baDtoPost.getEffect());
+        }
+        if (baDtoPost.getKeywords() != null){
+            battleAptitude.setKeywords(
+                    baDtoPost.getKeywords().stream()
+                            .map(keyword -> keywordRepository.findByName(keyword.toLowerCase())
+                                    .orElseThrow(() -> new NotFoundException("keyword")))
+                            .toList()
+            );
+        }
+        battleAptitudeRepository.save(battleAptitude);
+        return new BattleAptitudeDtoGet(battleAptitude);
+    }
+
+    private void updateAptitudeContext(AptitudeContext aptitudeContext, AptitudeContextDtoPost dto){
+        if (dto.getIsOptimisation() != null){
+            aptitudeContext.setOptimisation(dto.getIsOptimisation());
+        }
+        if (dto.getIsUniversal() != null){
+            aptitudeContext.setUniversal(dto.getIsUniversal());
+        }
+        if (dto.getIsEqualGames() != null){
+            aptitudeContext.setEqualGames(dto.getIsEqualGames());
+        }
+        if (dto.getPoints() != null){
+            aptitudeContext.setPoints(dto.getPoints());
+        }
+        if (dto.getCharterId() != null){
+            Charter charter = charterRepository.findById(dto.getCharterId())
+                    .orElseThrow(() -> new NotFoundException("Charter "+ dto.getCharterId() + " for Aptitude Context"));
+            aptitudeContext.setCharter(charter);
+        }
     }
 }

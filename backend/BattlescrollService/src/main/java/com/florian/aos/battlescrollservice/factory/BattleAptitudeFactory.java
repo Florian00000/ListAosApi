@@ -32,9 +32,9 @@ public class BattleAptitudeFactory {
         }
 
         AptitudeContext aptitudeContext = AptitudeContext.builder()
-                .isOptimisation(baDto.getAptitudeContext().isOptimisation())
-                .isUniversal(baDto.getAptitudeContext().isUniversal())
-                .isEqualGames(baDto.getAptitudeContext().isEqualGames())
+                .isOptimisation(baDto.getAptitudeContext().getIsOptimisation())
+                .isUniversal(baDto.getAptitudeContext().getIsUniversal())
+                .isEqualGames(baDto.getAptitudeContext().getIsEqualGames())
                 .build();
         if (baDto.getAptitudeContext().getPoints() != null){
             aptitudeContext.setPoints(baDto.getAptitudeContext().getPoints());

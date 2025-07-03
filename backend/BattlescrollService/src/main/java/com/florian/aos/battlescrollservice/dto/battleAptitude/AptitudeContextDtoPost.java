@@ -7,9 +7,9 @@ import lombok.Data;
 @Builder
 public class AptitudeContextDtoPost {
 
-    private boolean isOptimisation;
-    private boolean isUniversal;
-    private boolean isEqualGames;
+    private Boolean isOptimisation;
+    private Boolean isUniversal;
+    private Boolean isEqualGames;
     private Integer points;
     private Long charterId;
 }

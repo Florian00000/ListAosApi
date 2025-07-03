@@ -37,4 +37,10 @@ public class BattleAptitudeController {
     public ResponseEntity<BattleAptitudeDtoGet> addBattleAptitude(@RequestBody BattleAptitudeDtoPost dtoPost){
         return ResponseEntity.status(201).body(battleAptitudeService.addBattleAptitude(dtoPost));
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<BattleAptitudeDtoGet> updateBattleAptitude(@PathVariable Long id,
+                                                                     @RequestBody BattleAptitudeDtoPost dto){
+        return ResponseEntity.status(200).body(battleAptitudeService.updateBattleAptitude(id, dto));
+    }
 }
