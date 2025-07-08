@@ -2,7 +2,6 @@ package com.florian.aos.battlescrollservice.dto.battleAptitude;
 
 
 import com.florian.aos.battlescrollservice.entity.battleAptitude.AptitudeContext;
-import jakarta.persistence.*;
 import lombok.Data;
 
 @Data

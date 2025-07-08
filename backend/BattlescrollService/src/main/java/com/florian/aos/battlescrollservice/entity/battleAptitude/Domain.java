@@ -26,10 +26,10 @@ public class Domain {
     private boolean isMagicalDomain;
 
 
-    @OneToMany(mappedBy = "domain")
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.REMOVE)
     private List<MagicPrayer> magicPrayerList;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "domain_context_id", referencedColumnName = "id_aptitude_context")
     private AptitudeContext aptitudeContext;
 }

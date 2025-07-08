@@ -9,7 +9,7 @@ import com.florian.aos.battlescrollservice.repository.KeywordRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.AptitudeContextRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.BattleAptitudeRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
-import com.florian.aos.battlescrollservice.service.BattleAptitudeService;
+import com.florian.aos.battlescrollservice.service.battleAptitude.BattleAptitudeService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

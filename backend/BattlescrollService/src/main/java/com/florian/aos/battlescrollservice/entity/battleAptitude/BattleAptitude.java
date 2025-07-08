@@ -21,21 +21,21 @@ public class BattleAptitude {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_battle_aptitude")
-    protected Long id;
+    private Long id;
 
     @Column(nullable = false)
-    protected String name;
+    private String name;
     @Column(name = "aptitude_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private AptitudeType aptitudeType;
     @Column(nullable = false)
-    protected String phase;
+    private String phase;
     @Column(nullable = false)
-    protected String description;
+    private String description;
     @Column(nullable = false)
-    protected String announcement;
+    private String announcement;
     @Column(nullable = false)
-    protected String effect;
+    private String effect;
 
     @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(
@@ -43,7 +43,7 @@ public class BattleAptitude {
             joinColumns = @JoinColumn(name = "id_aptitude"),
             inverseJoinColumns = @JoinColumn(name = "id_keyword")
     )
-    protected List<Keyword> keywords;
+    private List<Keyword> keywords;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "aptitude_context_id" , referencedColumnName = "id_aptitude_context")
