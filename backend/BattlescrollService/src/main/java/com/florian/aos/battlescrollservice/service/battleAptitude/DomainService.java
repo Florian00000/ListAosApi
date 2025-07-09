@@ -5,6 +5,7 @@ import com.florian.aos.battlescrollservice.dto.battleAptitude.DomainDtoPost;
 import com.florian.aos.battlescrollservice.entity.battleAptitude.AptitudeContext;
 import com.florian.aos.battlescrollservice.entity.battleAptitude.Domain;
 import com.florian.aos.battlescrollservice.entity.charter.Charter;
+import com.florian.aos.battlescrollservice.exception.ResourceAlreadyExistsException;
 import com.florian.aos.battlescrollservice.exception.NotFoundException;
 import com.florian.aos.battlescrollservice.factory.BattleAptitudeFactory;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.DomainRepository;
@@ -26,10 +27,17 @@ public class DomainService {
         this.charterRepository = charterRepository;
     }
 
+//    public DomainDtoGet getDomain (Long id){
+//        Domain domain =
+//    }
+
     @Transactional
     public DomainDtoGet addDomain(DomainDtoPost dtoPost){
         if (dtoPost.getAptitudeContext() == null){
             throw new IllegalArgumentException("BattleAptitude must have aptitudeContext");
+        }
+        if (domainRepository.existsByName(dtoPost.getName())){
+            throw new ResourceAlreadyExistsException("This domain name");
         }
         BattleAptitudeFactory.DomainBundle bundle = factory.createDomain(dtoPost);
         Domain domain = bundle.domain();

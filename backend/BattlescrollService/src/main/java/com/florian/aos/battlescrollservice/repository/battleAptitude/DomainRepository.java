@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DomainRepository extends CrudRepository<Domain, Long> {
+    boolean existsByName(String name);
 }
