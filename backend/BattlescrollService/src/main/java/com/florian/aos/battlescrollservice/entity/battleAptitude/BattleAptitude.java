@@ -45,7 +45,7 @@ public class BattleAptitude {
     )
     private List<Keyword> keywords;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
     @JoinColumn(name = "aptitude_context_id" , referencedColumnName = "id_aptitude_context")
     private AptitudeContext aptitudeContext;
 }

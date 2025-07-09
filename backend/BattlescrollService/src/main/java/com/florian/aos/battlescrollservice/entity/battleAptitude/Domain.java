@@ -29,7 +29,7 @@ public class Domain {
     @OneToMany(mappedBy = "domain", cascade = CascadeType.REMOVE)
     private List<MagicPrayer> magicPrayerList;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
     @JoinColumn(name = "domain_context_id", referencedColumnName = "id_aptitude_context")
     private AptitudeContext aptitudeContext;
 }
