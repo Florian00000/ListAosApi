@@ -1,16 +1,17 @@
 package com.florian.aos.battlescrollservice.service.battleAptitude;
 
-import com.florian.aos.battlescrollservice.dto.battleAptitude.AptitudeContextDtoPost;
-import com.florian.aos.battlescrollservice.dto.battleAptitude.BattleAptitudeDtoGet;
-import com.florian.aos.battlescrollservice.dto.battleAptitude.BattleAptitudeDtoPost;
+import com.florian.aos.battlescrollservice.dto.battleAptitude.*;
 import com.florian.aos.battlescrollservice.entity.battleAptitude.AptitudeContext;
 import com.florian.aos.battlescrollservice.entity.battleAptitude.BattleAptitude;
+import com.florian.aos.battlescrollservice.entity.battleAptitude.Domain;
+import com.florian.aos.battlescrollservice.entity.battleAptitude.MagicPrayer;
 import com.florian.aos.battlescrollservice.entity.charter.Charter;
 import com.florian.aos.battlescrollservice.exception.NotFoundException;
 import com.florian.aos.battlescrollservice.factory.BattleAptitudeFactory;
 import com.florian.aos.battlescrollservice.repository.KeywordRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.AptitudeContextRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.BattleAptitudeRepository;
+import com.florian.aos.battlescrollservice.repository.battleAptitude.DomainRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
 import com.florian.aos.battlescrollservice.utils.enums.AptitudeType;
 import org.springframework.stereotype.Service;
@@ -27,19 +28,24 @@ public class BattleAptitudeService {
     private final BattleAptitudeFactory battleAptitudeFactory;
     private final KeywordRepository keywordRepository;
     private final CharterRepository charterRepository;
+    private final DomainRepository domainRepository;
+
 
     public BattleAptitudeService(AptitudeContextRepository aptitudeContextRepository,
                                  BattleAptitudeRepository battleAptitudeRepository,
                                  BattleAptitudeFactory battleAptitudeFactory,
                                  KeywordRepository keywordRepository,
-                                 CharterRepository charterRepository
+                                 CharterRepository charterRepository, DomainRepository domainRepository
     ) {
         this.aptitudeContextRepository = aptitudeContextRepository;
         this.battleAptitudeRepository = battleAptitudeRepository;
         this.battleAptitudeFactory = battleAptitudeFactory;
         this.keywordRepository = keywordRepository;
         this.charterRepository = charterRepository;
+        this.domainRepository = domainRepository;
     }
+
+    //====================================== BattleAptitude ======================================
 
     public BattleAptitudeDtoGet getBattleAptitude(Long id){
         BattleAptitude battleAptitude = battleAptitudeRepository.findById(id)
@@ -73,7 +79,7 @@ public class BattleAptitudeService {
 
         if (dtoPost.getKeywords() != null && !dtoPost.getKeywords().isEmpty()){
             battleAptitude.setKeywords(dtoPost.getKeywords().stream()
-                    .map((keyword) -> keywordRepository.findByName(keyword.toLowerCase())
+                    .map((keyword) -> keywordRepository.findByNameIgnoreCase(keyword)
                     .orElseThrow(() -> new NotFoundException("Keyword")))
                     .toList()
             );
@@ -132,7 +138,7 @@ public class BattleAptitudeService {
         if (baDtoPost.getKeywords() != null){
             battleAptitude.setKeywords(
                     baDtoPost.getKeywords().stream()
-                            .map(keyword -> keywordRepository.findByName(keyword.toLowerCase())
+                            .map(keyword -> keywordRepository.findByNameIgnoreCase(keyword)
                                     .orElseThrow(() -> new NotFoundException("keyword")))
                             .toList()
             );
@@ -166,5 +172,45 @@ public class BattleAptitudeService {
                 .orElseThrow(() -> new NotFoundException("battle aptitude"));
         battleAptitudeRepository.delete(battleAptitude);
         return true;
+    }
+
+    //====================================== MagicPrayer ======================================
+    @Transactional
+    public MagicPrayerDtoGet addMagicPrayer(MagicPrayerDtoPost dtoPost) {
+        if (dtoPost.getAptitudeContext() == null){
+            throw new IllegalArgumentException("MagicPrayer must have aptitudeContext");
+        }
+
+        BattleAptitudeFactory.BattleAptitudeBundle bundle = battleAptitudeFactory.createMagicPrayer(dtoPost);
+        MagicPrayer magicPrayer = (MagicPrayer) bundle.battleAptitude();
+        AptitudeContext aptitudeContext = bundle.aptitudeContext();
+
+        if (dtoPost.getKeywords() != null && !dtoPost.getKeywords().isEmpty()){
+            magicPrayer.setKeywords(dtoPost.getKeywords().stream()
+                    .map((keyword) -> keywordRepository.findByNameIgnoreCase(keyword.toLowerCase())
+                            .orElseThrow(() -> new NotFoundException("Keyword " + keyword)))
+                    .toList()
+            );
+        }
+        if (!dtoPost.getAptitudeContext().getIsUniversal()){
+            if (dtoPost.getAptitudeContext().getCharterId() != null && dtoPost.getAptitudeContext().getCharterId() > 0){
+                Charter charter = charterRepository.findById(dtoPost.getAptitudeContext().getCharterId())
+                        .orElseThrow(() -> new NotFoundException("Charter"));
+                aptitudeContext.setCharter(charter);
+            }else{
+                throw new IllegalArgumentException("A non-universal MagicPrayer must be linked to a charter");
+            }
+        }
+        if (dtoPost.getDomainId() != null && dtoPost.getDomainId() > 0L){
+            Domain domain = domainRepository.findById(dtoPost.getDomainId())
+                    .orElseThrow(() -> new NotFoundException("Domain"));
+            if (domain.isMagicalDomain() != dtoPost.getIsMagical()){
+                throw new IllegalArgumentException("A spell must be attached to a magic domain and a prayer to a prayer domain (isMagical and isMagicalDomain).");
+            }
+            magicPrayer.setDomain(domain);
+        }
+        magicPrayer.setAptitudeContext(aptitudeContext);
+        battleAptitudeRepository.save(magicPrayer);
+        return new MagicPrayerDtoGet(magicPrayer);
     }
 }

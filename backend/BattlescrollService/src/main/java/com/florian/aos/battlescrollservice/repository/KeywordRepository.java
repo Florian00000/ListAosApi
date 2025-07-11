@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface KeywordRepository extends CrudRepository<Keyword, Long> {
-    Optional<Keyword> findByName(String name);
+    Optional<Keyword> findByNameIgnoreCase(String name);
 }

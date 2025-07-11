@@ -5,5 +5,7 @@ public enum AptitudeType {
     BATTLELINE,
     BATTLEFORMATION,
     HEROICTRAIT,
-    SKILL
+    SKILL,
+    SPELL,
+    PRAYER
 }

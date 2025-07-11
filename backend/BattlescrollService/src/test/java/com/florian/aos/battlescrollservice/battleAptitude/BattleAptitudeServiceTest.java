@@ -8,6 +8,7 @@ import com.florian.aos.battlescrollservice.factory.BattleAptitudeFactory;
 import com.florian.aos.battlescrollservice.repository.KeywordRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.AptitudeContextRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.BattleAptitudeRepository;
+import com.florian.aos.battlescrollservice.repository.battleAptitude.DomainRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
 import com.florian.aos.battlescrollservice.service.battleAptitude.BattleAptitudeService;
 import org.junit.jupiter.api.Assertions;
@@ -26,12 +27,13 @@ public class BattleAptitudeServiceTest {
     private final KeywordRepository keywordRepository =  Mockito.mock(KeywordRepository.class);
     private final CharterRepository charterRepository = Mockito.mock(CharterRepository.class);
     private BattleAptitudeService service ;
+    private final DomainRepository domainRepository = Mockito.mock(DomainRepository.class);
 
     @BeforeEach
     public void setUp(){
         battleAptitudeFactory = new BattleAptitudeFactory();
         service = new BattleAptitudeService(aptitudeContextRepository, battleAptitudeRepository,
-                battleAptitudeFactory, keywordRepository, charterRepository
+                battleAptitudeFactory, keywordRepository, charterRepository, domainRepository
                 );
     }
 
@@ -73,7 +75,7 @@ public class BattleAptitudeServiceTest {
                 .aptitudeType("artefact")
                 .aptitudeContext(contextDtoPost)
                 .keywords(List.of("keyword")).build();
-        Mockito.when(keywordRepository.findByName("keyword")).thenReturn(Optional.empty());
+        Mockito.when(keywordRepository.findByNameIgnoreCase("keyword")).thenReturn(Optional.empty());
 
         //act & assert
         Assertions.assertThrows(NotFoundException.class, () -> service.addBattleAptitude(baDtoPost));
@@ -96,7 +98,7 @@ public class BattleAptitudeServiceTest {
                 .aptitudeType("artefact")
                 .aptitudeContext(contextDtoPost)
                 .keywords(List.of("keyword")).build();
-        Mockito.when(keywordRepository.findByName("keyword")).thenReturn(Optional.of(Keyword.builder().build()));
+        Mockito.when(keywordRepository.findByNameIgnoreCase("keyword")).thenReturn(Optional.of(Keyword.builder().build()));
 
 
         //act & assert
@@ -121,7 +123,7 @@ public class BattleAptitudeServiceTest {
                 .aptitudeType("artefact")
                 .aptitudeContext(contextDtoPost)
                 .keywords(List.of("keyword")).build();
-        Mockito.when(keywordRepository.findByName("keyword")).thenReturn(Optional.of(Keyword.builder().build()));
+        Mockito.when(keywordRepository.findByNameIgnoreCase("keyword")).thenReturn(Optional.of(Keyword.builder().build()));
         Mockito.when(charterRepository.findById(1L)).thenReturn(Optional.empty());
 
         //act & assert

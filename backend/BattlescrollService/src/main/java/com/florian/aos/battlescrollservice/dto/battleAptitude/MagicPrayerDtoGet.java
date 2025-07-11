@@ -6,13 +6,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MagicPrayerDtoGetDom extends BattleAptitudeDtoGet{
-    private Integer launchValue;
+public class MagicPrayerDtoGet extends BattleAptitudeDtoGet {
+    private int launchValue;
     private Boolean isMagical;
 
-    public MagicPrayerDtoGetDom(MagicPrayer magicPrayer) {
+    private DomainDtoGetMagic domain;
+
+    public MagicPrayerDtoGet(MagicPrayer magicPrayer) {
         super(magicPrayer);
         this.launchValue = magicPrayer.getLaunchValue();
         this.isMagical = magicPrayer.isMagical();
+        if (magicPrayer.getDomain() != null){
+            this.domain = new DomainDtoGetMagic(magicPrayer.getDomain());
+        }
     }
 }

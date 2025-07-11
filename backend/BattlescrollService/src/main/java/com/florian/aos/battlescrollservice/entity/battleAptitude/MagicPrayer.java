@@ -1,9 +1,6 @@
 package com.florian.aos.battlescrollservice.entity.battleAptitude;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +16,9 @@ public class MagicPrayer extends BattleAptitude {
 
     @Column(name = "launch_value")
     private int launchValue;
+    private boolean isMagical;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "domain_id")
     private Domain domain;
 }
