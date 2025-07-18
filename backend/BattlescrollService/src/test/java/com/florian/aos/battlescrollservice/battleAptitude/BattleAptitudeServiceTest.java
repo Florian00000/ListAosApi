@@ -9,6 +9,7 @@ import com.florian.aos.battlescrollservice.repository.KeywordRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.AptitudeContextRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.BattleAptitudeRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.DomainRepository;
+import com.florian.aos.battlescrollservice.repository.battleAptitude.MagicPrayerRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
 import com.florian.aos.battlescrollservice.service.battleAptitude.BattleAptitudeService;
 import org.junit.jupiter.api.Assertions;
@@ -28,12 +29,13 @@ public class BattleAptitudeServiceTest {
     private final CharterRepository charterRepository = Mockito.mock(CharterRepository.class);
     private BattleAptitudeService service ;
     private final DomainRepository domainRepository = Mockito.mock(DomainRepository.class);
+    private final MagicPrayerRepository magicPrayerRepository = Mockito.mock(MagicPrayerRepository.class);
 
     @BeforeEach
     public void setUp(){
         battleAptitudeFactory = new BattleAptitudeFactory();
         service = new BattleAptitudeService(aptitudeContextRepository, battleAptitudeRepository,
-                battleAptitudeFactory, keywordRepository, charterRepository, domainRepository
+                battleAptitudeFactory, keywordRepository, charterRepository, domainRepository, magicPrayerRepository
                 );
     }
 

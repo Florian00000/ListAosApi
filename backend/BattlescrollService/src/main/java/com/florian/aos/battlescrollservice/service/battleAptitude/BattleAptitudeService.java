@@ -12,6 +12,7 @@ import com.florian.aos.battlescrollservice.repository.KeywordRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.AptitudeContextRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.BattleAptitudeRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.DomainRepository;
+import com.florian.aos.battlescrollservice.repository.battleAptitude.MagicPrayerRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
 import com.florian.aos.battlescrollservice.utils.enums.AptitudeType;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,14 @@ public class BattleAptitudeService {
     private final KeywordRepository keywordRepository;
     private final CharterRepository charterRepository;
     private final DomainRepository domainRepository;
+    private final MagicPrayerRepository magicPrayerRepository;
 
 
     public BattleAptitudeService(AptitudeContextRepository aptitudeContextRepository,
                                  BattleAptitudeRepository battleAptitudeRepository,
                                  BattleAptitudeFactory battleAptitudeFactory,
                                  KeywordRepository keywordRepository,
-                                 CharterRepository charterRepository, DomainRepository domainRepository
+                                 CharterRepository charterRepository, DomainRepository domainRepository, MagicPrayerRepository magicPrayerRepository
     ) {
         this.aptitudeContextRepository = aptitudeContextRepository;
         this.battleAptitudeRepository = battleAptitudeRepository;
@@ -43,6 +45,7 @@ public class BattleAptitudeService {
         this.keywordRepository = keywordRepository;
         this.charterRepository = charterRepository;
         this.domainRepository = domainRepository;
+        this.magicPrayerRepository = magicPrayerRepository;
     }
 
     //====================================== BattleAptitude ======================================
@@ -175,6 +178,17 @@ public class BattleAptitudeService {
     }
 
     //====================================== MagicPrayer ======================================
+    public MagicPrayerDtoGet getMagicPrayer(Long id){
+        MagicPrayer magicPrayer = magicPrayerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Magic Prayer"));
+        return new MagicPrayerDtoGet(magicPrayer);
+    }
+
+    public List<MagicPrayerDtoGet> getAllMagicPrayers(){
+        List<MagicPrayer> magicPrayers = (List<MagicPrayer>) magicPrayerRepository.findAll();
+        return magicPrayers.stream().map(MagicPrayerDtoGet::new).toList();
+    }
+
     @Transactional
     public MagicPrayerDtoGet addMagicPrayer(MagicPrayerDtoPost dtoPost) {
         if (dtoPost.getAptitudeContext() == null){
@@ -193,7 +207,7 @@ public class BattleAptitudeService {
             );
         }
         if (!dtoPost.getAptitudeContext().getIsUniversal()){
-            if (dtoPost.getAptitudeContext().getCharterId() != null && dtoPost.getAptitudeContext().getCharterId() > 0){
+            if (dtoPost.getAptitudeContext().getCharterId() != null){
                 Charter charter = charterRepository.findById(dtoPost.getAptitudeContext().getCharterId())
                         .orElseThrow(() -> new NotFoundException("Charter"));
                 aptitudeContext.setCharter(charter);
@@ -201,7 +215,7 @@ public class BattleAptitudeService {
                 throw new IllegalArgumentException("A non-universal MagicPrayer must be linked to a charter");
             }
         }
-        if (dtoPost.getDomainId() != null && dtoPost.getDomainId() > 0L){
+        if (dtoPost.getDomainId() != null ){
             Domain domain = domainRepository.findById(dtoPost.getDomainId())
                     .orElseThrow(() -> new NotFoundException("Domain"));
             if (domain.isMagicalDomain() != dtoPost.getIsMagical()){
@@ -213,4 +227,85 @@ public class BattleAptitudeService {
         battleAptitudeRepository.save(magicPrayer);
         return new MagicPrayerDtoGet(magicPrayer);
     }
+
+    @Transactional
+    public MagicPrayerDtoGet updateMagicPrayer(Long id, MagicPrayerDtoPost maDtoPost){
+        MagicPrayer magicPrayer = magicPrayerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("MagicPrayer"));
+
+        if (maDtoPost.getAptitudeContext() != null) {
+            if (magicPrayer.getAptitudeContext() == null) throw new NotFoundException("Context for Magic Prayer");
+            AptitudeContext aptitudeContext = magicPrayer.getAptitudeContext();
+
+            AptitudeContextDtoPost contextDtoPost = maDtoPost.getAptitudeContext();
+            updateAptitudeContext(aptitudeContext, contextDtoPost);
+        }
+
+        updateMagicPrayerFields(magicPrayer, maDtoPost);
+
+        if (maDtoPost.getAptitudeContext() != null && maDtoPost.getAptitudeContext().getCharterId() != null) {
+            if (maDtoPost.getAptitudeContext().getIsUniversal()){
+                throw new IllegalArgumentException("A universal MagicPrayer cannot be linked to a charter");
+            } else {
+                Charter charter = charterRepository.findById(maDtoPost.getAptitudeContext().getCharterId())
+                        .orElseThrow(() -> new NotFoundException("Charter"));
+                magicPrayer.getAptitudeContext().setCharter(charter);
+            }
+        }
+
+        if (maDtoPost.getDomainId() != null){
+            if (maDtoPost.getIsMagical() == null) {
+                throw new IllegalArgumentException("isMagical cannot be null for update domain");
+            }
+            Domain domain = domainRepository.findById(maDtoPost.getDomainId())
+                    .orElseThrow(() -> new NotFoundException("Domain"));
+            if (domain.isMagicalDomain() != maDtoPost.getIsMagical()){
+                throw new IllegalArgumentException("A spell must be attached to a magic domain and a prayer to a prayer domain (isMagical and isMagicalDomain).");
+            }
+            magicPrayer.setDomain(domain);
+        }
+
+        magicPrayerRepository.save(magicPrayer);
+        return new MagicPrayerDtoGet(magicPrayer);
+    }
+
+    private void updateMagicPrayerFields(MagicPrayer magicPrayer, MagicPrayerDtoPost maDtoPost){
+        if (maDtoPost.getName() != null && !maDtoPost.getName().isBlank()){
+            magicPrayer.setName(maDtoPost.getName());
+        }
+        if (maDtoPost.getAptitudeType() != null && !maDtoPost.getAptitudeType().isBlank()){
+            try {
+                magicPrayer.setAptitudeType(AptitudeType.valueOf(maDtoPost.getAptitudeType().toUpperCase()));
+            }catch (IllegalArgumentException e){
+                throw new IllegalArgumentException("Illegal aptitude type " + maDtoPost.getAptitudeType());
+            }
+        }
+        if (maDtoPost.getPhase() != null && !maDtoPost.getPhase().isBlank()){
+            magicPrayer.setPhase(maDtoPost.getPhase());
+        }
+        if (maDtoPost.getDescription() != null && !maDtoPost.getDescription().isBlank()){
+            magicPrayer.setDescription(maDtoPost.getDescription());
+        }
+        if (maDtoPost.getAnnouncement() != null && !maDtoPost.getAnnouncement().isBlank()){
+            magicPrayer.setAnnouncement(maDtoPost.getAnnouncement());
+        }
+        if (maDtoPost.getEffect() != null && !maDtoPost.getEffect().isBlank()){
+            magicPrayer.setEffect(maDtoPost.getEffect());
+        }
+        if (maDtoPost.getIsMagical() != null){
+            magicPrayer.setMagical(maDtoPost.getIsMagical());
+        }
+        if (maDtoPost.getLaunchValue() != null){
+            magicPrayer.setLaunchValue(maDtoPost.getLaunchValue());
+        }
+        if (maDtoPost.getKeywords() != null){
+            magicPrayer.setKeywords(
+                    maDtoPost.getKeywords().stream()
+                            .map(keyword -> keywordRepository.findByNameIgnoreCase(keyword)
+                                    .orElseThrow(() -> new NotFoundException("keyword")))
+                            .toList()
+            );
+        }
+    }
+
 }

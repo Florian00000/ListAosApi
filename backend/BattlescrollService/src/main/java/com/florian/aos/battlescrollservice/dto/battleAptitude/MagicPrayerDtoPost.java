@@ -15,7 +15,7 @@ public class MagicPrayerDtoPost {
     private String description;
     private String announcement;
     private String effect;
-    private int launchValue;
+    private Integer launchValue;
     private Boolean isMagical;
 
     private List<String> keywords;
