@@ -308,4 +308,11 @@ public class BattleAptitudeService {
         }
     }
 
+    public boolean deleteMagicPrayer(Long id){
+        MagicPrayer magicPrayer = magicPrayerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Magic Prayer"));
+        magicPrayerRepository.delete(magicPrayer);
+        return true;
+    }
+
 }

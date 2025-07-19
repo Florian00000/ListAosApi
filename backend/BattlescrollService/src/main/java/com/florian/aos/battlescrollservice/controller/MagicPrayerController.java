@@ -3,6 +3,8 @@ package com.florian.aos.battlescrollservice.controller;
 import com.florian.aos.battlescrollservice.dto.battleAptitude.MagicPrayerDtoGet;
 import com.florian.aos.battlescrollservice.dto.battleAptitude.MagicPrayerDtoPost;
 import com.florian.aos.battlescrollservice.service.battleAptitude.BattleAptitudeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,5 +38,11 @@ public class MagicPrayerController {
     @PutMapping("/update/{id}")
     public ResponseEntity<MagicPrayerDtoGet> updateMagicPrayer(@PathVariable Long id, @RequestBody MagicPrayerDtoPost dto){
         return ResponseEntity.status(200).body(battleAptitudeService.updateMagicPrayer(id, dto));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteMagicPrayer(@PathVariable Long id){
+        battleAptitudeService.deleteMagicPrayer(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
