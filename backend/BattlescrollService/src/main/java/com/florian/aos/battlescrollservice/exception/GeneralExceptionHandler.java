@@ -66,6 +66,7 @@ public class GeneralExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
     }
 
+    //exception des validateurs
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDto> handleBindErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String message = ex.getFieldErrors().stream()

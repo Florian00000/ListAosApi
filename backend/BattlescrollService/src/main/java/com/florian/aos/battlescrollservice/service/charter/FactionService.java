@@ -52,7 +52,7 @@ public class FactionService {
     private Faction prepareFaction (FactionDtoPost dto){
         Version version = versionRepository.findByName(dto.getVersion())
                 .orElseThrow(() -> new NotFoundException("Version " + dto.getVersion()));
-        return charterFactory.factionFromDto(dto, version);
+        return charterFactory.fromDto(dto, version);
     }
 
     public FactionDtoGet addFaction(FactionDtoPost factionDtoPost){

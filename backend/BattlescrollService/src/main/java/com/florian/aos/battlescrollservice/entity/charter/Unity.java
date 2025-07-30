@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,4 +36,12 @@ public class Unity extends Charter{
     @OneToMany(mappedBy = "unity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Weapon> weapons;
 
+
+    public void addWeapon(Weapon weapon) {
+        if (weapons == null) {
+            weapons = new ArrayList<>();
+        }
+        weapon.setUnity(this);
+        weapons.add(weapon);
+    }
 }

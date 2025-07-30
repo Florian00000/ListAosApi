@@ -15,20 +15,20 @@ public abstract class AbstractCrudService <T, ID> {
         this.entityName = entityName;
     }
 
-    public T getById(ID id) {
+    protected T getById(ID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(entityName));
     }
 
-    public List<T> getAll(){
+    protected List<T> getAll(){
         return (List<T>) repository.findAll();
     }
 
-    public T save(T entity){
+    protected T save(T entity){
         return repository.save(entity);
     }
 
-    public boolean deleteById(ID id) {
+    protected boolean deleteById(ID id) {
         T entity = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(entityName));
         repository.delete(entity);

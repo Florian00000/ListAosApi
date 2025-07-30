@@ -17,16 +17,17 @@ public class CharterFactory {
 
     public record UnityBundle(Unity unity, List<Weapon> weapons){};
 
-    public Faction factionFromDto(FactionDtoPost dto, Version version){
-        if (dto.getName() == null || dto.getName().isBlank()){
-            throw new IllegalArgumentException("Name cannot be null or empty");
-        }
+    public Faction fromDto(FactionDtoPost dto, Version version){
 
         Faction faction = Faction
                 .builder()
                 .name(dto.getName())
                 .version(version)
                 .build();
+
+        if (dto.getImagePath() != null && !dto.getImagePath().isBlank()){
+            faction.setImagePath(dto.getImagePath());
+        }
 
         try {
             faction.setAlliance(AllianceType.valueOf(dto.getAlliance().toUpperCase()));
@@ -36,7 +37,7 @@ public class CharterFactory {
         return faction;
     }
 
-    public UnityBundle unityFromDto(UnityDtoPost dto, Version version){
+    public UnityBundle fromDto(UnityDtoPost dto, Version version){
           Unity unity = Unity.builder()
                     .name(dto.getName())
                     .version(version)
@@ -46,6 +47,10 @@ public class CharterFactory {
                     .health(dto.getHealth())
                     .points(dto.getPoints())
                     .build();
+
+        if (dto.getImagePath() != null && !dto.getImagePath().isBlank()){
+            unity.setImagePath(dto.getImagePath());
+        }
 
         if (dto.getWeapons() != null && !dto.getWeapons().isEmpty()){
             List<Weapon> weapons = dto.getWeapons().stream().map(
