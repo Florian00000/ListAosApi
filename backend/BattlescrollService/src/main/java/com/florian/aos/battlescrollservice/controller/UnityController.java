@@ -9,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/units")
 public class UnityController {
@@ -17,6 +19,16 @@ public class UnityController {
 
     public UnityController(UnityService unityService) {
         this.unityService = unityService;
+    }
+
+    @GetMapping("/{unityId}")
+    public ResponseEntity<UnityDtoGet> getUnity(@PathVariable Long unityId){
+        return ResponseEntity.ok(unityService.getUnity(unityId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UnityDtoGet>> getAllUnits(){
+        return ResponseEntity.ok(unityService.getAllUnits());
     }
 
     @PostMapping(value = "/add")

@@ -43,6 +43,14 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
         this.factionRepository = factionRepository;
     }
 
+    public UnityDtoGet getUnity(Long id) {
+        return new UnityDtoGet(getById(id));
+    }
+
+    public List<UnityDtoGet> getAllUnits(){
+        return getAll().stream().map(UnityDtoGet::new).toList();
+    }
+
     @Transactional
     public UnityDtoGet addUnity(UnityDtoPost dtoPost){
         Unity unity = prepareUnity(dtoPost);
