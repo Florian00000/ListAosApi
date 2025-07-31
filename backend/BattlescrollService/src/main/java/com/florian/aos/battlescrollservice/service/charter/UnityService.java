@@ -13,11 +13,11 @@ import com.florian.aos.battlescrollservice.repository.KeywordRepository;
 import com.florian.aos.battlescrollservice.repository.VersionRepository;
 import com.florian.aos.battlescrollservice.repository.charter.FactionRepository;
 import com.florian.aos.battlescrollservice.repository.charter.UnityRepository;
-import com.florian.aos.battlescrollservice.repository.charter.WeaponRepository;
 import com.florian.aos.battlescrollservice.service.AbstractCrudService;
 import com.florian.aos.battlescrollservice.service.ImageStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -45,6 +45,29 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
 
     @Transactional
     public UnityDtoGet addUnity(UnityDtoPost dtoPost){
+        Unity unity = prepareUnity(dtoPost);
+        unity = (Unity) imageStorageService.saveImageToCharter(unity);
+
+        unity = addKeywordsToUnity(dtoPost, unity);
+        addFactionToUnity(unity, dtoPost.getFactionId());
+
+        save(unity);
+        return new UnityDtoGet(unity);
+    }
+
+    @Transactional
+    public UnityDtoGet addUnity(UnityDtoPost dtoPost, MultipartFile imageFile){
+        Unity unity = prepareUnity(dtoPost);
+        unity = (Unity) imageStorageService.saveImageToCharter(unity, imageFile);
+
+        unity = addKeywordsToUnity(dtoPost, unity);
+        addFactionToUnity(unity, dtoPost.getFactionId());
+
+        save(unity);
+        return new UnityDtoGet(unity);
+    }
+
+    private Unity prepareUnity(UnityDtoPost dtoPost){
         if (unityRepository.existsByNameIgnoreCase(dtoPost.getName())){
             throw new ResourceAlreadyExistsException("Unity name");
         }
@@ -56,8 +79,10 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
         List<Weapon> weaponList = bundle.weapons();
         weaponList.forEach(unity::addWeapon);
 
-        unity = (Unity) imageStorageService.saveImageToCharter(unity);
+        return unity;
+    }
 
+    private Unity addKeywordsToUnity(UnityDtoPost dtoPost, Unity unity){
         if (dtoPost.getKeywords() != null && !dtoPost.getKeywords().isEmpty()){
             unity.setKeywords(dtoPost.getKeywords().stream()
                     .map((keyword) -> keywordRepository.findByNameIgnoreCase(keyword)
@@ -65,12 +90,12 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
                     .toList()
             );
         }
+        return unity;
+    }
 
-        Faction faction = factionRepository.findById(dtoPost.getFactionId())
+    private void addFactionToUnity(Unity unity, Long factionId){
+        Faction faction = factionRepository.findById(factionId)
                 .orElseThrow(() -> new NotFoundException("Faction"));
         unity.setFaction(faction);
-
-        save(unity);
-        return new UnityDtoGet(unity);
     }
 }

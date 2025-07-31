@@ -23,8 +23,8 @@ public class WeaponDtoPost {
     private Integer wound;
     @NotNull(message = "perforation must not be null")
     private Integer perforation;
-    @NotNull(message = "damage must not be null")
-    private Integer damage;
+    @NotBlank(message = "damage must not be null")
+    private String damage;
 
     private List<String> keywords;
 }

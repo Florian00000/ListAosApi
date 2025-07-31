@@ -16,7 +16,7 @@ public class WeaponDtoGet {
     private Integer touch;
     private Integer wound;
     private Integer perforation;
-    private Integer damage;
+    private String damage;
 
     private List<String> keywords;
 
