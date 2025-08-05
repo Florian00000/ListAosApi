@@ -51,6 +51,11 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
         return getAll().stream().map(UnityDtoGet::new).toList();
     }
 
+    public List<UnityDtoGet> getAllUnitsByFaction(String factionName){
+        List<Unity> units = unityRepository.findAllByFactionNameIgnoreCase(factionName);
+        return units.stream().map(UnityDtoGet::new).toList();
+    }
+
     @Transactional
     public UnityDtoGet addUnity(UnityDtoPost dtoPost){
         Unity unity = prepareUnity(dtoPost);
@@ -105,5 +110,11 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
         Faction faction = factionRepository.findById(factionId)
                 .orElseThrow(() -> new NotFoundException("Faction"));
         unity.setFaction(faction);
+    }
+
+    public boolean deleteUnity(Long id){
+        Unity unity = getById(id);
+        imageStorageService.deleteImage(unity.getImagePath());
+        return deleteById(id);
     }
 }

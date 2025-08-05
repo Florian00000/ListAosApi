@@ -3,6 +3,7 @@ package com.florian.aos.battlescrollservice.controller;
 import com.florian.aos.battlescrollservice.dto.unity.UnityDtoGet;
 import com.florian.aos.battlescrollservice.dto.unity.UnityDtoPost;
 import com.florian.aos.battlescrollservice.service.charter.UnityService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +32,11 @@ public class UnityController {
         return ResponseEntity.ok(unityService.getAllUnits());
     }
 
+    @GetMapping("/get-all-by-faction/{factionName}")
+    public ResponseEntity<List<UnityDtoGet>> getAllUnitsByFaction(@PathVariable String factionName){
+        return ResponseEntity.ok(unityService.getAllUnitsByFaction(factionName));
+    }
+
     @PostMapping(value = "/add")
     public ResponseEntity<UnityDtoGet> addUnity(@Validated @RequestBody UnityDtoPost unityDtoPost){
         return ResponseEntity.status(201).body(unityService.addUnity(unityDtoPost));
@@ -40,5 +46,11 @@ public class UnityController {
     public ResponseEntity<UnityDtoGet> addUnity(@Validated @RequestPart("unity") UnityDtoPost unityDtoPost,
                                                 @RequestPart("image")MultipartFile image){
         return ResponseEntity.status(201).body(unityService.addUnity(unityDtoPost, image));
+    }
+
+    @DeleteMapping("/delete/{unityId}")
+    public ResponseEntity<String> deleteUnity(@PathVariable Long unityId){
+        unityService.deleteUnity(unityId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
