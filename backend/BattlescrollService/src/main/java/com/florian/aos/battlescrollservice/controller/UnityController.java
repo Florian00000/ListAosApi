@@ -2,6 +2,7 @@ package com.florian.aos.battlescrollservice.controller;
 
 import com.florian.aos.battlescrollservice.dto.unity.UnityDtoGet;
 import com.florian.aos.battlescrollservice.dto.unity.UnityDtoPost;
+import com.florian.aos.battlescrollservice.dto.unity.UnityDtoUpdate;
 import com.florian.aos.battlescrollservice.service.charter.UnityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,6 +47,19 @@ public class UnityController {
     public ResponseEntity<UnityDtoGet> addUnity(@Validated @RequestPart("unity") UnityDtoPost unityDtoPost,
                                                 @RequestPart("image")MultipartFile image){
         return ResponseEntity.status(201).body(unityService.addUnity(unityDtoPost, image));
+    }
+
+    @PutMapping("/update/{unityId}")
+    public ResponseEntity<UnityDtoGet> updateUnity(@PathVariable Long unityId,
+                                                   @Validated @RequestBody UnityDtoUpdate dto){
+        return ResponseEntity.status(200).body(unityService.updateUnity(unityId, dto));
+    }
+
+    @PutMapping(value = "/update/{unityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UnityDtoGet> updateUnity(@PathVariable Long unityId,
+                                                   @Validated @RequestPart("unity") UnityDtoUpdate dto,
+                                                   @RequestPart("image") MultipartFile image){
+        return ResponseEntity.status(200).body(unityService.updateUnity(unityId, dto, image));
     }
 
     @DeleteMapping("/delete/{unityId}")

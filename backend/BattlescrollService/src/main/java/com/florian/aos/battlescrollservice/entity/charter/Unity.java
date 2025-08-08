@@ -33,7 +33,7 @@ public class Unity extends Charter{
     @JoinColumn(name = "faction_id")
     private Faction faction;
 
-    @OneToMany(mappedBy = "unity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "unity", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Weapon> weapons;
 
 

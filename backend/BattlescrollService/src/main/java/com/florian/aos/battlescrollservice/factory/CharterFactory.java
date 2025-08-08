@@ -15,8 +15,6 @@ import java.util.List;
 @Component
 public class CharterFactory {
 
-    public record UnityBundle(Unity unity, List<Weapon> weapons){};
-
     public Faction fromDto(FactionDtoPost dto, Version version){
 
         Faction faction = Faction
@@ -37,7 +35,7 @@ public class CharterFactory {
         return faction;
     }
 
-    public UnityBundle fromDto(UnityDtoPost dto, Version version){
+    public Unity fromDto(UnityDtoPost dto, Version version){
           Unity unity = Unity.builder()
                     .name(dto.getName())
                     .version(version)
@@ -52,13 +50,7 @@ public class CharterFactory {
             unity.setImagePath(dto.getImagePath());
         }
 
-        if (dto.getWeapons() != null && !dto.getWeapons().isEmpty()){
-            List<Weapon> weapons = dto.getWeapons().stream().map(
-                    weapon -> weaponFromDto(weapon)
-            ).toList();
-            return new UnityBundle(unity, weapons);
-        }
-        return new UnityBundle(unity, List.of());
+        return unity;
     }
 
     public Weapon weaponFromDto(WeaponDtoPost dto){
@@ -71,10 +63,13 @@ public class CharterFactory {
                     .perforation(dto.getPerforation())
                     .damage(dto.getDamage())
                     .build();
+            if (weapon.isShootingWeapon()){
+                if (dto.getRanged() == null || dto.getRanged() < 1){
+                    throw new IllegalArgumentException("If " + dto.getName() + " is shooting weapon, it need ranged");
+                }
+                weapon.setRanged(dto.getRanged());
+            }
 
-        if (dto.getRanged() != null){
-            weapon.setRanged(dto.getRanged());
-        }
         return weapon;
     }
 }
