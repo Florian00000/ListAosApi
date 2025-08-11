@@ -52,6 +52,13 @@ public class GeneralExceptionHandler {
         return buildErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
     }
 
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<ErrorDto> handleBadRequest(ResourceAlreadyExistsException e, HttpServletRequest request) {
+        log.warn("BadRequestException: {}", e.getMessage());
+        return buildErrorResponse(e.getMessage() + " is already used", HttpStatus.CONFLICT, request.getRequestURI());
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleOtherExceptions(Exception e, HttpServletRequest request) {
         log.error("Erreur inattendue", e);
@@ -59,6 +66,7 @@ public class GeneralExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
     }
 
+    //exception des validateurs
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDto> handleBindErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String message = ex.getFieldErrors().stream()

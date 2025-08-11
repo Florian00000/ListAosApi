@@ -1,6 +1,7 @@
 package com.florian.aos.battlescrollservice.entity.battleAptitude;
 
 import com.florian.aos.battlescrollservice.entity.Keyword;
+import com.florian.aos.battlescrollservice.utils.enums.AptitudeType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,18 +21,21 @@ public class BattleAptitude {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_battle_aptitude")
-    protected Long id;
+    private Long id;
 
     @Column(nullable = false)
-    protected String name;
+    private String name;
+    @Column(name = "aptitude_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AptitudeType aptitudeType;
     @Column(nullable = false)
-    protected String phase;
-    @Column(nullable = false)
-    protected String description;
-    @Column(nullable = false)
-    protected String announcement;
-    @Column(nullable = false)
-    protected String effect;
+    private String phase;
+    @Column(nullable = false, length = 1000)
+    private String description;
+    @Column(nullable = false , length = 1000)
+    private String announcement;
+    @Column(nullable = false, length = 1000)
+    private String effect;
 
     @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(
@@ -39,8 +43,9 @@ public class BattleAptitude {
             joinColumns = @JoinColumn(name = "id_aptitude"),
             inverseJoinColumns = @JoinColumn(name = "id_keyword")
     )
-    protected List<Keyword> keywords;
+    private List<Keyword> keywords;
 
-    @OneToMany(mappedBy = "battleAptitude")
-    protected List<AptitudeContext> aptitudeContextList;
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
+    @JoinColumn(name = "aptitude_context_id" , referencedColumnName = "id_aptitude_context")
+    private AptitudeContext aptitudeContext;
 }

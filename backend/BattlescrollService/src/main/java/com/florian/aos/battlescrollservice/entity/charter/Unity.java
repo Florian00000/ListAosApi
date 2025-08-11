@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,7 +33,15 @@ public class Unity extends Charter{
     @JoinColumn(name = "faction_id")
     private Faction faction;
 
-    @OneToMany(mappedBy = "unity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "unity", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Weapon> weapons;
 
+
+    public void addWeapon(Weapon weapon) {
+        if (weapons == null) {
+            weapons = new ArrayList<>();
+        }
+        weapon.setUnity(this);
+        weapons.add(weapon);
+    }
 }
