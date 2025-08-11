@@ -3,8 +3,10 @@ package com.florian.aos.battlescrollservice.controller;
 import com.florian.aos.battlescrollservice.dto.faction.FactionDtoGet;
 import com.florian.aos.battlescrollservice.dto.faction.FactionDtoPost;
 import com.florian.aos.battlescrollservice.service.charter.FactionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +33,7 @@ public class FactionController {
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<FactionDtoGet> addFaction(@RequestBody FactionDtoPost factionDtoPost) {
+    public ResponseEntity<FactionDtoGet> addFaction(@Validated @RequestBody FactionDtoPost factionDtoPost) {
         return ResponseEntity.status(201).body(factionService.addFaction(factionDtoPost));
     }
 
@@ -54,4 +56,11 @@ public class FactionController {
                                                        @RequestPart("image") MultipartFile image){
         return ResponseEntity.status(200).body(factionService.updateFaction(factionId, factionDtoPost, image));
     }
+
+    @DeleteMapping("/delete/{factionId}")
+    public ResponseEntity<String> deleteFaction(@PathVariable Long factionId) {
+        factionService.deleteFaction(factionId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

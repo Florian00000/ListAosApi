@@ -1,5 +1,12 @@
 package com.florian.aos.battlescrollservice.utils.enums;
 
 public enum AptitudeType {
-    ARTEFACT
+    ARTEFACT,
+    BATTLELINE,
+    BATTLEFORMATION,
+    HEROICTRAIT,
+    SKILL,
+    SPELL,
+    PRAYER,
+    PASSIVE
 }

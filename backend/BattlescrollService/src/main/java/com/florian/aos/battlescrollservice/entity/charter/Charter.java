@@ -43,6 +43,6 @@ public abstract class Charter {
     )
     protected List<Keyword> keywords;
 
-    @OneToMany(mappedBy = "charter")
+    @OneToMany(mappedBy = "charter", cascade = CascadeType.REMOVE)
     protected List<AptitudeContext> aptitudeContextList;
 }

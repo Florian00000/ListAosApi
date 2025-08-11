@@ -34,7 +34,7 @@ public class Weapon {
     @Column(nullable = false)
     private int perforation;
     @Column(nullable = false)
-    private int damage;
+    private String damage;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_unity")
