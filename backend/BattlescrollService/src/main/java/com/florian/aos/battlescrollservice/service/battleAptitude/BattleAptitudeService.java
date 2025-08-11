@@ -14,6 +14,7 @@ import com.florian.aos.battlescrollservice.repository.battleAptitude.BattleAptit
 import com.florian.aos.battlescrollservice.repository.battleAptitude.DomainRepository;
 import com.florian.aos.battlescrollservice.repository.battleAptitude.MagicPrayerRepository;
 import com.florian.aos.battlescrollservice.repository.charter.CharterRepository;
+import com.florian.aos.battlescrollservice.service.AbstractCrudService;
 import com.florian.aos.battlescrollservice.utils.enums.AptitudeType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BattleAptitudeService {
+public class BattleAptitudeService extends AbstractCrudService<BattleAptitude, Long> {
 
     private final AptitudeContextRepository aptitudeContextRepository;
     private final BattleAptitudeRepository battleAptitudeRepository;
@@ -37,8 +38,10 @@ public class BattleAptitudeService {
                                  BattleAptitudeRepository battleAptitudeRepository,
                                  BattleAptitudeFactory battleAptitudeFactory,
                                  KeywordRepository keywordRepository,
-                                 CharterRepository charterRepository, DomainRepository domainRepository, MagicPrayerRepository magicPrayerRepository
+                                 CharterRepository charterRepository, DomainRepository domainRepository,
+                                 MagicPrayerRepository magicPrayerRepository
     ) {
+        super(battleAptitudeRepository, "battleAptitude");
         this.aptitudeContextRepository = aptitudeContextRepository;
         this.battleAptitudeRepository = battleAptitudeRepository;
         this.battleAptitudeFactory = battleAptitudeFactory;
@@ -46,6 +49,30 @@ public class BattleAptitudeService {
         this.charterRepository = charterRepository;
         this.domainRepository = domainRepository;
         this.magicPrayerRepository = magicPrayerRepository;
+    }
+
+
+    //====================================== general ======================================
+
+    public BattleAptitudeDtoGet addBattleAptitudeToCharter(Long idBattleAptitude, Long idCharter){
+        BattleAptitude battleAptitude = getById(idBattleAptitude);
+        AptitudeContext aptitudeContext = battleAptitude.getAptitudeContext();
+
+        if (aptitudeContext.isUniversal()) throw new IllegalArgumentException("Universal Aptitude can't be attached to Charter");
+
+        Charter charter = charterRepository.findById(idCharter).orElseThrow(()-> new NotFoundException("Charter"));
+        aptitudeContext.setCharter(charter);
+        aptitudeContextRepository.save(aptitudeContext);
+        return new BattleAptitudeDtoGet(battleAptitude);
+    }
+
+    public BattleAptitudeDtoGet detachBattleAptitudeToCharter(Long idBattleAptitude){
+        BattleAptitude battleAptitude = getById(idBattleAptitude);
+        AptitudeContext aptitudeContext = battleAptitude.getAptitudeContext();
+
+        aptitudeContext.setCharter(null);
+        aptitudeContextRepository.save(aptitudeContext);
+        return new BattleAptitudeDtoGet(battleAptitude);
     }
 
     //====================================== BattleAptitude ======================================
@@ -314,5 +341,6 @@ public class BattleAptitudeService {
         magicPrayerRepository.delete(magicPrayer);
         return true;
     }
+
 
 }

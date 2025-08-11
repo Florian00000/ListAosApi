@@ -50,4 +50,15 @@ public class BattleAptitudeController {
         battleAptitudeService.deleteBattleAptitude(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PatchMapping("/attach/{idBa}/charter/{idCharter}")
+    public ResponseEntity<BattleAptitudeDtoGet> attachBattleAptitudeToCharter(@PathVariable Long idBa,
+                                                                              @PathVariable Long idCharter){
+        return ResponseEntity.ok(battleAptitudeService.addBattleAptitudeToCharter(idBa, idCharter));
+    }
+
+    @PatchMapping("/detach-to-charter/{idBa}")
+    public ResponseEntity<BattleAptitudeDtoGet> detachBattleAptitudeToCharter(@PathVariable Long idBa){
+        return ResponseEntity.ok(battleAptitudeService.detachBattleAptitudeToCharter(idBa));
+    }
 }

@@ -7,5 +7,6 @@ public enum AptitudeType {
     HEROICTRAIT,
     SKILL,
     SPELL,
-    PRAYER
+    PRAYER,
+    PASSIVE
 }

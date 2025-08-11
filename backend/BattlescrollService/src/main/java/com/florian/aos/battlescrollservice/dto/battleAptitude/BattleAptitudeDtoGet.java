@@ -17,6 +17,8 @@ public class BattleAptitudeDtoGet {
     private String effect;
     private List<String> keywords;
 
+    private String aptitudeType;
+
     private AptitudeContextDtoGet aptitudeContext;
 
     public BattleAptitudeDtoGet (BattleAptitude battleAptitude) {
@@ -29,6 +31,9 @@ public class BattleAptitudeDtoGet {
         this.aptitudeContext = new AptitudeContextDtoGet(battleAptitude.getAptitudeContext());
         if (battleAptitude.getKeywords() != null && !battleAptitude.getKeywords().isEmpty()){
            this.keywords = battleAptitude.getKeywords().stream().map(Keyword::getName).toList();
+        }
+        if (battleAptitude.getAptitudeType() != null){
+            this.aptitudeType = battleAptitude.getAptitudeType().toString();
         }
     }
 }

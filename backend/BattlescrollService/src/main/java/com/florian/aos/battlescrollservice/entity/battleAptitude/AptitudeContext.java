@@ -31,7 +31,7 @@ public class AptitudeContext {
     @JoinColumn(name = "charter_id")
     private Charter charter;
 
-    @OneToOne(mappedBy = "aptitudeContext", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "aptitudeContext", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private BattleAptitude battleAptitude;
 
     @OneToOne(mappedBy = "aptitudeContext" , cascade = CascadeType.REMOVE)
