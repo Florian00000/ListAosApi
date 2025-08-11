@@ -53,22 +53,6 @@ public class FactionServiceTest {
     }
 
     @Test
-    public void GivenAddFaction_WhenNameIsNull_ThenThrowException() {
-        //arrange
-        FactionDtoPost factionDtoPost = FactionDtoPost
-                .builder()
-                .version("v4")
-                .alliance("death")
-                .build();
-        Version version = Version.builder().name("v4").build();
-        Mockito.when(versionRepository.findByName("v4")).thenReturn(Optional.of(version));
-
-
-        //act & assert
-        Assertions.assertThrows(IllegalArgumentException.class, () -> fs.addFaction(factionDtoPost));
-    }
-
-    @Test
     public void GivenAddFaction_ThenSaveFaction(){
         //arrange
         FactionDtoPost factionDtoPost = FactionDtoPost
@@ -104,6 +88,7 @@ public class FactionServiceTest {
         //arrange
         FactionDtoPost factionDtoPost = FactionDtoPost
                 .builder()
+                .name("faction")
                 .version("x")
                 .build();
 

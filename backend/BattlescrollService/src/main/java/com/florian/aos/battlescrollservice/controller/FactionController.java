@@ -6,6 +6,7 @@ import com.florian.aos.battlescrollservice.service.charter.FactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +33,7 @@ public class FactionController {
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<FactionDtoGet> addFaction(@RequestBody FactionDtoPost factionDtoPost) {
+    public ResponseEntity<FactionDtoGet> addFaction(@Validated @RequestBody FactionDtoPost factionDtoPost) {
         return ResponseEntity.status(201).body(factionService.addFaction(factionDtoPost));
     }
 
