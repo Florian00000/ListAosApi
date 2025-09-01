@@ -2,10 +2,12 @@ package com.florian.aos.battlescrollservice.dto.unity;
 
 import com.florian.aos.battlescrollservice.dto.faction.FactionDtoGet;
 import com.florian.aos.battlescrollservice.entity.Keyword;
+import com.florian.aos.battlescrollservice.entity.battleAptitude.AptitudeContext;
 import com.florian.aos.battlescrollservice.entity.charter.Unity;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Objects;
 
 @Data
 public class UnityDtoGet {
@@ -46,8 +48,20 @@ public class UnityDtoGet {
         this.weapons = unity.getWeapons().stream().map(WeaponDtoGet::new).toList();
         if (unity.getAptitudeContextList() != null && !unity.getAptitudeContextList().isEmpty()){
             this.battleAptitudes = unity.getAptitudeContextList().stream()
-                    .map(aptitudeContext -> new BattleAptitudeDtoGetUnity(
-                            aptitudeContext.getBattleAptitude()))
+                    .map(aptitudeContext -> {
+                        //TODO faire des logs
+                        if (aptitudeContext.getBattleAptitude() == null){
+                            System.out.println("AptitudeContext n'est pas lié à battleAptitude" + aptitudeContext.getId());
+                            if (aptitudeContext.getDomain() != null){
+                                System.out.println("domain de l'aptitude context"+ aptitudeContext.getDomain().getName());
+                            } else {
+                                System.out.println("Aptitude context n'est pas lié à un domaine");
+                            }
+                        }
+                        return aptitudeContext.getBattleAptitude();
+                    })
+                    .filter(Objects::nonNull)
+                    .map(BattleAptitudeDtoGetUnity::new)
                     .toList();
         }
 
