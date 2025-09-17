@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UnityService extends AbstractCrudService<Unity, Long> {
@@ -196,8 +197,8 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
         if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()){
             unity.setKeywords(dto.getKeywords().stream()
                     .map((keyword) -> keywordRepository.findByNameIgnoreCase(keyword)
-                            .orElseThrow(() -> new NotFoundException("Keyword")))
-                    .toList()
+                            .orElseThrow(() -> new NotFoundException("Keyword " + keyword)))
+                    .collect(Collectors.toList())
             );
         }
         if (dto.getVersion() != null){
