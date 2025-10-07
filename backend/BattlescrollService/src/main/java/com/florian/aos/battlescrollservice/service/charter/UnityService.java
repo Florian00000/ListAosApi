@@ -103,7 +103,7 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
         if (dtoPost.getKeywords() != null && !dtoPost.getKeywords().isEmpty()){
             unity.setKeywords(dtoPost.getKeywords().stream()
                     .map((keyword) -> keywordRepository.findByNameIgnoreCase(keyword)
-                            .orElseThrow(() -> new NotFoundException("Keyword")))
+                            .orElseThrow(() -> new NotFoundException("Keyword: " + keyword)))
                     .toList()
             );
         }
@@ -124,7 +124,7 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
             if (weaponDtoPost.getKeywords() != null && !weaponDtoPost.getKeywords().isEmpty()){
                 List<Keyword> keywords = weaponDtoPost.getKeywords().stream()
                         .map(keyword -> keywordRepository.findByNameIgnoreCase(keyword)
-                                .orElseThrow(() -> new NotFoundException("Keyword " + keyword)))
+                                .orElseThrow(() -> new NotFoundException("Keyword: " + keyword)))
                         .toList();
                 weapon.setKeywords(keywords);
             }
@@ -197,7 +197,7 @@ public class UnityService extends AbstractCrudService<Unity, Long> {
         if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()){
             unity.setKeywords(dto.getKeywords().stream()
                     .map((keyword) -> keywordRepository.findByNameIgnoreCase(keyword)
-                            .orElseThrow(() -> new NotFoundException("Keyword " + keyword)))
+                            .orElseThrow(() -> new NotFoundException("Keyword: " + keyword)))
                     .collect(Collectors.toList())
             );
         }
