@@ -45,7 +45,9 @@ public class UnityDtoGet {
         this.health = unity.getHealth();
         this.points = unity.getPoints();
         this.faction = new FactionDtoGet(unity.getFaction());
-        this.weapons = unity.getWeapons().stream().map(WeaponDtoGet::new).toList();
+        if (unity.getWeapons() != null && !unity.getWeapons().isEmpty()){
+            this.weapons = unity.getWeapons().stream().map(WeaponDtoGet::new).toList();
+        }
         if (unity.getAptitudeContextList() != null && !unity.getAptitudeContextList().isEmpty()){
             this.battleAptitudes = unity.getAptitudeContextList().stream()
                     .map(aptitudeContext -> {
