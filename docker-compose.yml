@@ -30,7 +30,26 @@ services:
     container_name: battlescroll_service
     depends_on:
       battlescroll_mysql:
-        condition: service_healthy    
+        condition: service_healthy   
+    image:  "${DOCKER_USERNAME_HUB}/battlescroll_service"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://battlescroll_mysql:3306/${DOCKER_DB_NAME}?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${DOCKER_DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DOCKER_DB_PASSWORD}
+    volumes:
+      - ./backend/BattlescrollService/public/images:/app/public/images
+    ports:
+      - "8080:8080"
+    networks:
+      - list_aos
+    profiles:
+      - prod
+
+  battlescroll_service_dev:
+    container_name: battlescroll_service
+    depends_on:
+      battlescroll_mysql:
+        condition: service_healthy       
     build:
       context: ./backend/BattlescrollService
       dockerfile: dockerfile
@@ -44,3 +63,5 @@ services:
       - "8080:8080"
     networks:
       - list_aos
+    profiles:
+      - dev
