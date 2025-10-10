@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BattleAptitudeService extends AbstractCrudService<BattleAptitude, Long> {
@@ -110,7 +111,7 @@ public class BattleAptitudeService extends AbstractCrudService<BattleAptitude, L
         if (dtoPost.getKeywords() != null && !dtoPost.getKeywords().isEmpty()){
             battleAptitude.setKeywords(dtoPost.getKeywords().stream()
                     .map((keyword) -> keywordRepository.findByNameIgnoreCase(keyword)
-                    .orElseThrow(() -> new NotFoundException("Keyword")))
+                    .orElseThrow(() -> new NotFoundException("Keyword " + keyword )))
                     .toList()
             );
         }
@@ -169,8 +170,8 @@ public class BattleAptitudeService extends AbstractCrudService<BattleAptitude, L
             battleAptitude.setKeywords(
                     baDtoPost.getKeywords().stream()
                             .map(keyword -> keywordRepository.findByNameIgnoreCase(keyword)
-                                    .orElseThrow(() -> new NotFoundException("keyword")))
-                            .toList()
+                                    .orElseThrow(() -> new NotFoundException("keyword" + keyword)))
+                            .collect(Collectors.toList())
             );
         }
         battleAptitudeRepository.save(battleAptitude);
@@ -329,8 +330,8 @@ public class BattleAptitudeService extends AbstractCrudService<BattleAptitude, L
             magicPrayer.setKeywords(
                     maDtoPost.getKeywords().stream()
                             .map(keyword -> keywordRepository.findByNameIgnoreCase(keyword)
-                                    .orElseThrow(() -> new NotFoundException("keyword")))
-                            .toList()
+                                    .orElseThrow(() -> new NotFoundException("keyword" + keyword)))
+                            .collect(Collectors.toList())
             );
         }
     }
