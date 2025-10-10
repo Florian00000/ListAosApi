@@ -1,0 +1,44 @@
+volumes:
+  # list_aos_images:
+  mysql_volumes_battlescroll:
+networks:
+  list_aos:
+
+services:
+  battlescroll_mysql:
+    image: mysql@sha256:b842a59bfaf81ea435b65be7e041c280416df8d295457f64c7c1445484464123
+    container_name: battlescroll_mysql
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DOCKER_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DOCKER_DB_NAME}     
+      MYSQL_USER: ${DOCKER_DB_USERNAME}
+      MYSQL_PASSWORD: ${DOCKER_DB_PASSWORD}
+    volumes:
+      - mysql_volumes_battlescroll:/var/lib/mysql
+      - ./sql/battlescroll_service.sql:/docker-entrypoint-initdb.d/battlescroll_service.sql
+    networks:
+      - list_aos
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+   
+  battlescroll_service:
+    container_name: battlescroll_service
+    depends_on:
+      battlescroll_mysql:
+        condition: service_healthy    
+    image: "${DOCKER_USERNAME_HUB}/battlescroll_service:${GITHUB_SHA}"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://battlescroll_mysql:3306/${DOCKER_DB_NAME}?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${DOCKER_DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DOCKER_DB_PASSWORD}
+    volumes:
+      - ./backend/BattlescrollService/public/images:/app/public/images
+    ports:
+      - "8080:8080"
+    networks:
+      - list_aos
