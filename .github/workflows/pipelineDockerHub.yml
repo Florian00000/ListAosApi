@@ -110,11 +110,11 @@ jobs:
       - name: Stop Docker Compose
         if: always()
         run: |
-          docker-compose -f docker-compose-hub.yml down   
+          docker-compose -f docker-compose-pipeline.yml down   
 
   latest:
     name: Build and Push Docker Image with tag latest
-    needs: docker
+    needs: deploy
     runs-on: ubuntu-latest
 
     steps:
