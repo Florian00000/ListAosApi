@@ -30,7 +30,8 @@ services:
     container_name: battlescroll_service
     depends_on:
       battlescroll_mysql:
-        condition: service_healthy    
+        condition: service_healthy   
+    image:  "${DOCKER_USERNAME_HUB}/battlescroll_service"
     build:
       context: ./backend/BattlescrollService
       dockerfile: dockerfile
