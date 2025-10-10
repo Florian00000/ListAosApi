@@ -67,50 +67,54 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/battlescroll_service:${{ github.sha }}
  
-  # deploy:
-  #   name: Deploy Application and Test Environment
-  #   needs: docker
-  #   runs-on: ubuntu-latest
+  deploy:
+    name: Deploy Application and Test Environment
+    needs: docker
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     # Étape 1: Vérification du code source
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+    steps:
+      # Étape 1: Vérification du code source
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     # Étape 2: Installer Docker et Docker Compose
-  #     - name: Set up Docker
-  #       uses: docker/setup-buildx-action@v2
+      # Étape 2: Installer Docker et Docker Compose
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
 
-  #     - name: Install Docker Compose
-  #       run: |
-  #         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  #         sudo chmod +x /usr/local/bin/docker-compose
-  #         docker-compose --version  
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version  
 
-  #     # Étape 3: Lancer Docker Compose
-  #     - name: Start Docker Compose
-  #       env:
-  #         DOCKER_USERNAME_HUB: ${{ secrets.DOCKER_USERNAME }}
-  #         GITHUB_SHA: ${{ github.sha }}
-  #       run: |
-  #         docker-compose -f docker-compose-hub.yml up -d --build
+      # Étape 3: Lancer Docker Compose
+      - name: Start Docker Compose
+        env:
+          DOCKER_USERNAME_HUB: ${{ secrets.DOCKER_USERNAME }}
+          GITHUB_SHA: ${{ github.sha }}
+          DOCKER_DB_ROOT_PASSWORD: ${{ secrets.DOCKER_DB_ROOT_PASSWORD}}
+          DOCKER_DB_NAME: ${{ secrets.DOCKER_DB_NAME}} 
+          DOCKER_DB_USERNAME: ${{ secrets.DOCKER_DB_USERNAME}}
+          DOCKER_DB_PASSWORD: ${{ secrets.DOCKER_DB_PASSWORD}}
+        run: |
+          docker-compose -f docker-compose-pipeline.yml up -d --build
 
-  #     # Étape 4: Tests d'intégration
-  #     - name: Test Backend Health
-  #       run: |
-  #         for i in {1..10}; do
-  #           curl --fail http://localhost:8080/api/factions && break || sleep 5;
-  #         done || exit 1
+      # Étape 4: Tests d'intégration
+      - name: Test Backend Health
+        run: |
+          for i in {1..10}; do
+            curl --fail http://localhost:8080/api/factions && break || sleep 5;
+          done || exit 1
 
-  #     # Étape 5: Arrêt des services Docker Compose
-  #     - name: Stop Docker Compose
-  #       if: always()
-  #       run: |
-  #         docker-compose -f docker-compose-hub.yml down   
+      # Étape 5: Arrêt des services Docker Compose
+      - name: Stop Docker Compose
+        if: always()
+        run: |
+          docker-compose -f docker-compose-pipeline.yml down   
 
   latest:
     name: Build and Push Docker Image with tag latest
-    needs: docker
+    needs: deploy
     runs-on: ubuntu-latest
 
     steps:

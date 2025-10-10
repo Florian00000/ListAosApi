@@ -25,8 +25,12 @@ public class BattleAptitudeDtoGet {
         this.id = battleAptitude.getId();
         this.name = battleAptitude.getName();
         this.phase = battleAptitude.getPhase();
-        this.description = battleAptitude.getDescription();
-        this.announcement = battleAptitude.getAnnouncement();
+        if (battleAptitude.getDescription() != null && !battleAptitude.getDescription().isEmpty()){
+            this.description = battleAptitude.getDescription();
+        }
+        if (battleAptitude.getAnnouncement() != null && !battleAptitude.getAnnouncement().isEmpty()){
+            this.announcement = battleAptitude.getAnnouncement();
+        }
         this.effect = battleAptitude.getEffect();
         this.aptitudeContext = new AptitudeContextDtoGet(battleAptitude.getAptitudeContext());
         if (battleAptitude.getKeywords() != null && !battleAptitude.getKeywords().isEmpty()){

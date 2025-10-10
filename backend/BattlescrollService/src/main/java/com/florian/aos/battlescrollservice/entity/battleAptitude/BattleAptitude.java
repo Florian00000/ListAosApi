@@ -30,9 +30,9 @@ public class BattleAptitude {
     private AptitudeType aptitudeType;
     @Column(nullable = false)
     private String phase;
-    @Column(nullable = false, length = 1000)
+    @Column( length = 1000)
     private String description;
-    @Column(nullable = false , length = 1000)
+    @Column( length = 1000)
     private String announcement;
     @Column(nullable = false, length = 1000)
     private String effect;

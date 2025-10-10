@@ -31,9 +31,7 @@ services:
     depends_on:
       battlescroll_mysql:
         condition: service_healthy    
-    build:
-      context: ./backend/BattlescrollService
-      dockerfile: dockerfile
+    image: "${DOCKER_USERNAME_HUB}/battlescroll_service:${GITHUB_SHA}"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://battlescroll_mysql:3306/${DOCKER_DB_NAME}?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: ${DOCKER_DB_USERNAME}

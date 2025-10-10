@@ -1,10 +1,7 @@
 package com.florian.aos.battlescrollservice.entity.charter;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -12,7 +9,8 @@ import java.util.List;
 
 @Entity
 @SuperBuilder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @DiscriminatorValue("UNITY")
