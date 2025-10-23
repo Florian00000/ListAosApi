@@ -12,7 +12,7 @@ public class WeaponDtoGet {
     private String name;
     private Boolean isShootingWeapon;
     private Integer ranged;
-    private Integer attacks;
+    private String attacks;
     private Integer touch;
     private Integer wound;
     private Integer perforation;

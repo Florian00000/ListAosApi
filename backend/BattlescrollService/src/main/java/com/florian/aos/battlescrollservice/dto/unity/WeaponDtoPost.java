@@ -2,6 +2,7 @@ package com.florian.aos.battlescrollservice.dto.unity;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,7 +17,8 @@ public class WeaponDtoPost {
     private Boolean isShootingWeapon;
     private Integer ranged;
     @NotNull(message = "attacks must not be null")
-    private Integer attacks;
+    @Size(max = 100, message = "attacks must not exceed 100 characters")
+    private String attacks;
     @NotNull(message = "touch must not be null")
     private Integer touch;
     @NotNull(message = "wound must not be null")

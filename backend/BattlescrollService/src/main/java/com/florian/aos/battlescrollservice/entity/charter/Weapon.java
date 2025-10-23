@@ -25,8 +25,8 @@ public class Weapon {
     @Column(nullable = false)
     private boolean isShootingWeapon;
     private int ranged;
-    @Column(nullable = false)
-    private int attacks;
+    @Column(nullable = false, length = 100)
+    private String attacks;
     @Column(nullable = false)
     private int touch;
     @Column(nullable = false)

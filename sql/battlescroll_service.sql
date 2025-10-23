@@ -129,7 +129,7 @@ CREATE TABLE `charter` (
   UNIQUE KEY `uc_charter_name` (`name`),
   KEY `FKi4oyr40p86ys6m2le87alm73e` (`version_id`),
   CONSTRAINT `FKi4oyr40p86ys6m2le87alm73e` FOREIGN KEY (`version_id`) REFERENCES `version` (`id_version`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -393,7 +393,7 @@ DROP TABLE IF EXISTS `weapon`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `weapon` (
   `id_weapon` bigint NOT NULL AUTO_INCREMENT,
-  `attacks` int NOT NULL,
+  `attacks` varchar(100) NOT NULL,
   `damage` varchar(255) NOT NULL,
   `is_shooting_weapon` bit(1) NOT NULL,
   `weapon_name` varchar(255) NOT NULL,
@@ -405,7 +405,7 @@ CREATE TABLE `weapon` (
   PRIMARY KEY (`id_weapon`),
   KEY `FKf6lwjib7nlslail6dnu0n5p5f` (`id_unity`),
   CONSTRAINT `FKf6lwjib7nlslail6dnu0n5p5f` FOREIGN KEY (`id_unity`) REFERENCES `unity` (`id_charter`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -414,7 +414,7 @@ CREATE TABLE `weapon` (
 
 LOCK TABLES `weapon` WRITE;
 /*!40000 ALTER TABLE `weapon` DISABLE KEYS */;
-INSERT INTO `weapon` VALUES (6,1,'D6',_binary '','Rage de Kurnotheal',1,12,2,2,9),(7,6,'2',_binary '\0','Rage de Kurnotheal et Serments Cinglants',2,0,3,3,9),(8,1,'4',_binary '','Lance de Kurnoth',2,12,2,3,10),(9,5,'2',_binary '\0','Lance de Kurnoth',2,0,3,3,10),(10,6,'4',_binary '\0','Grande Ramure de Scaradroth',2,0,4,2,10),(11,5,'D3',_binary '\0','Lianes Perçantes et  Fauchon Spirituel',1,0,3,3,11),(12,6,'1',_binary '','Projecteurs à Maleflamme sur Mesure',2,10,2,3,13),(13,4,'D3',_binary '\0','Bâton du Rat Cornu',1,0,4,4,13),(14,6,'3',_binary '\0','Braseros à Maleflamme',2,0,4,2,13),(15,10,'1',_binary '','Frémifuries',1,12,4,4,14),(16,5,'2',_binary '\0','Serres Déchirantes',1,0,3,2,14),(17,10,'1',_binary '\0','Essaim de Tressanguilles',1,0,4,4,14),(18,5,'2',_binary '\0','Lame de Revenant et Pince Caudale',1,0,3,4,15),(19,5,'2',_binary '','Souffle Verdoyant',1,12,4,3,16),(20,4,'5',_binary '\0','Epée Gardienne',2,0,3,2,16),(21,2,'3',_binary '\0','Enormes Griffes Empaleuses',2,0,4,2,16),(22,3,'2',_binary '','Racine étrangleuses',1,10,3,2,17),(23,5,'2',_binary '\0','Attaque de Ballayage',1,0,4,2,17),(24,2,'3',_binary '\0','Enormes Griffes Empaleuses',2,0,4,2,17),(25,4,'D3',_binary '','Sceptre de Liances Tueuses',1,18,4,3,18),(26,5,'2',_binary '\0','Attaque de Ballayage',1,0,4,2,18),(27,2,'3',_binary '\0','Enormes Griffes Empaleuses',2,0,4,2,18),(28,6,'1',_binary '','Nuiée de Fiel-follets',1,12,4,4,19),(29,3,'D3',_binary '\0','Faux de Vert-bois et Aprelarve',1,0,3,4,19),(30,2,'1',_binary '','Arc Diaphane',1,12,3,3,20),(31,1,'1',_binary '\0','Serres Cruelles',0,0,3,4,20),(32,4,'2',_binary '\0','Longue Epée de Kurnoth',1,0,3,3,21),(33,3,'3',_binary '\0','Faux de Kurnoth',1,0,3,3,22),(34,2,'2',_binary '','Grand Arc de Kurnoth',1,18,3,3,23),(35,3,'1',_binary '\0','Apres Griffes',0,0,3,3,23),(36,2,'1',_binary '\0','Lame et Haste de Protecteur',1,0,3,4,24),(37,3,'1',_binary '\0','Serres Cruelles et Crocs',0,0,3,4,25),(38,6,'D3',_binary '\0','Mandibules Puissantes et Carapace Acérée',1,0,4,2,26),(39,3,'D3',_binary '\0','Masse Traînante',1,0,4,2,27);
+INSERT INTO `weapon` VALUES (6,'1','D6',_binary '','Rage de Kurnotheal',1,12,2,2,9),(7,'6','2',_binary '\0','Rage de Kurnotheal et Serments Cinglants',2,0,3,3,9),(8,'1','4',_binary '','Lance de Kurnoth',2,12,2,3,10),(9,'5','2',_binary '\0','Lance de Kurnoth',2,0,3,3,10),(10,'6','4',_binary '\0','Grande Ramure de Scaradroth',2,0,4,2,10),(11,'5','D3',_binary '\0','Lianes Perçantes et  Fauchon Spirituel',1,0,3,3,11),(12,'6','1',_binary '','Projecteurs à Maleflamme sur Mesure',2,10,2,3,13),(13,'4','D3',_binary '\0','Bâton du Rat Cornu',1,0,4,4,13),(14,'6','3',_binary '\0','Braseros à Maleflamme',2,0,4,2,13),(15,'10','1',_binary '','Frémifuries',1,12,4,4,14),(16,'5','2',_binary '\0','Serres Déchirantes',1,0,3,2,14),(17,'10','1',_binary '\0','Essaim de Tressanguilles',1,0,4,4,14),(18,'5','2',_binary '\0','Lame de Revenant et Pince Caudale',1,0,3,4,15),(19,'5','2',_binary '','Souffle Verdoyant',1,12,4,3,16),(20,'4','5',_binary '\0','Epée Gardienne',2,0,3,2,16),(21,'2','3',_binary '\0','Enormes Griffes Empaleuses',2,0,4,2,16),(22,'3','2',_binary '','Racine étrangleuses',1,10,3,2,17),(23,'5','2',_binary '\0','Attaque de Ballayage',1,0,4,2,17),(24,'2','3',_binary '\0','Enormes Griffes Empaleuses',2,0,4,2,17),(25,'4','D3',_binary '','Sceptre de Liances Tueuses',1,18,4,3,18),(26,'5','2',_binary '\0','Attaque de Ballayage',1,0,4,2,18),(27,'2','3',_binary '\0','Enormes Griffes Empaleuses',2,0,4,2,18),(28,'6','1',_binary '','Nuiée de Fiel-follets',1,12,4,4,19),(29,'3','D3',_binary '\0','Faux de Vert-bois et Aprelarve',1,0,3,4,19),(30,'2','1',_binary '','Arc Diaphane',1,12,3,3,20),(31,'1','1',_binary '\0','Serres Cruelles',0,0,3,4,20),(32,'4','2',_binary '\0','Longue Epée de Kurnoth',1,0,3,3,21),(33,'3','3',_binary '\0','Faux de Kurnoth',1,0,3,3,22),(34,'2','2',_binary '','Grand Arc de Kurnoth',1,18,3,3,23),(35,'3','1',_binary '\0','Apres Griffes',0,0,3,3,23),(36,'2','1',_binary '\0','Lame et Haste de Protecteur',1,0,3,4,24),(37,'3','1',_binary '\0','Serres Cruelles et Crocs',0,0,3,4,25),(38,'6','D3',_binary '\0','Mandibules Puissantes et Carapace Acérée',1,0,4,2,26),(39,'3','D3',_binary '\0','Masse Traînante',1,0,4,2,27);
 /*!40000 ALTER TABLE `weapon` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -454,4 +454,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-09 12:21:16
+-- Dump completed on 2025-10-23 16:27:35
