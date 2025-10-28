@@ -1,0 +1,38 @@
+package com.florian.aos.securityservice.controller;
+
+
+import com.florian.aos.securityservice.dto.TokenDtoGet;
+import com.florian.aos.securityservice.dto.user.UserDtoPost;
+import com.florian.aos.securityservice.dto.user.UserLoginDto;
+import com.florian.aos.securityservice.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
+
+    //TODO tester les routes
+    @PostMapping("/register")
+    public ResponseEntity<TokenDtoGet> registerUser(@RequestBody UserDtoPost userDtoPost) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userDtoPost));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenDtoGet> loginUser(@RequestBody UserLoginDto loginDto) {
+        return ResponseEntity.ok(userService.loginUser(loginDto));
+    }
+
+
+}

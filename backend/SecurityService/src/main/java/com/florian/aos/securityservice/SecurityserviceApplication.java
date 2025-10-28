@@ -1,4 +1,4 @@
-package com.florian.securityservice;
+package com.florian.aos.securityservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
