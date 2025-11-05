@@ -43,18 +43,9 @@ public class UserService implements UserDetailsService {
         this.authenticationManager = authenticationManager;
     }
 
-    public Role createRole(Role role) {
-        return roleRepository.save(role);
-    }
-
-    public boolean deleteRole(int id) {
-        Role role = roleRepository.findById(id).orElseThrow(() -> new NotFoundException("Role are not found"));
-        roleRepository.delete(role);
-        return true;
-    }
-
-    public Role findRole(String role) {
-        return roleRepository.findByRole(role).orElseThrow(() -> new NotFoundException("Role are not found"));
+    private Role findRole(String role) {
+        return roleRepository.findByRole("ROLE_" + role.toUpperCase())
+                .orElseThrow(() -> new NotFoundException("Role are not found"));
     }
 
     public TokenDtoGet registerUser(UserDtoPost dtoPost){

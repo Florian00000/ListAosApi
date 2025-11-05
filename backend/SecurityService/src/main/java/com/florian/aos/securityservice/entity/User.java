@@ -22,9 +22,9 @@ public class User implements UserDetails {
     private long id;
 
     @Column(nullable = false)
-    private String firstname;
+    private String firstName;
     @Column(nullable = false)
-    private String lastname;
+    private String lastName;
     @Column(unique = true, nullable = false)
     private String email;
     @Column(nullable = false)
@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private String password;
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "user_role")
     @JsonIgnore
     private List<Role> roles;

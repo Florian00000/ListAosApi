@@ -16,8 +16,8 @@ public class UserDtoPost {
 
     public User convertToUser() {
         User user = User.builder()
-                .firstname(firstName)
-                .lastname(lastName)
+                .firstName(firstName)
+                .lastName(lastName)
                 .email(email)
                 .build();
         return user;
