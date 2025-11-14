@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
                             .map(this::findRole).toList();
                     user.setRoles(roles);
                 }else {
-                    user.setRoles(List.of(findRole("ROLE_USER")));
+                    user.setRoles(List.of(findRole("USER")));
                 }
             }catch (Exception e){
                 throw new IllegalArgumentException("problem with role allocation");
@@ -78,7 +78,7 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
             return true;
         }catch (Exception e){
-            throw new BadCredentialsException("invalid email or password");
+            throw new IllegalArgumentException("invalid email or password");
         }
     }
 

@@ -23,7 +23,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    //TODO Configurer la sécurité sur les toutes et les cors
+    //TODO les cors
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -48,15 +48,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(crsf -> crsf.disable())
-                //On lui passse la configuration pour les cors crée juste en dessous
+                //On lui passe la configuration pour les cors crée juste en dessous
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/api/visitor/**").permitAll()
-                        .requestMatchers("/api/user/**").hasRole("USER")
+//                        .requestMatchers("/api/user/**").hasRole("USER")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 )
                 .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -70,8 +68,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
         // configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:5173"));
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173", "http://localhost:80",
-                "http://front_it_training_container:80", "http://localhost"));
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:8080"));
         // configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
 

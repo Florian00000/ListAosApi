@@ -17,8 +17,6 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    //TODO tester
-
     @PostMapping("/create-role")
     public ResponseEntity<RoleDtoGet> createRole(@RequestBody RoleDtoPost roleDtoPost){
         return ResponseEntity.status(201).body(adminService.createRole(roleDtoPost));

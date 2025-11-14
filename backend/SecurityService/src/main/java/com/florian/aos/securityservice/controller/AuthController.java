@@ -23,7 +23,6 @@ public class AuthController {
         this.userService = userService;
     }
 
-    //TODO tester les routes
     @PostMapping("/register")
     public ResponseEntity<TokenDtoGet> registerUser(@RequestBody UserDtoPost userDtoPost) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userDtoPost));
