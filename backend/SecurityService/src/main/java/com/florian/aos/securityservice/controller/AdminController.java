@@ -5,6 +5,7 @@ import com.florian.aos.securityservice.dto.role.RoleDtoPost;
 import com.florian.aos.securityservice.service.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,18 +19,18 @@ public class AdminController {
     }
 
     @PostMapping("/create-role")
-    public ResponseEntity<RoleDtoGet> createRole(@RequestBody RoleDtoPost roleDtoPost){
+    public ResponseEntity<RoleDtoGet> createRole(@Validated @RequestBody RoleDtoPost roleDtoPost){
         return ResponseEntity.status(201).body(adminService.createRole(roleDtoPost));
     }
 
     @DeleteMapping("/delete-role")
-    public ResponseEntity<String> deleteRole(@RequestBody RoleDtoPost roleDtoPost){
+    public ResponseEntity<String> deleteRole(@Validated @RequestBody RoleDtoPost roleDtoPost){
         adminService.deleteRole(roleDtoPost);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Role are deleted");
     }
 
     @PatchMapping("/add-role-to-user/{id}")
-    public ResponseEntity<String> addRoleToUser(@RequestBody RoleDtoPost roleDtoPost,
+    public ResponseEntity<String> addRoleToUser(@Validated @RequestBody RoleDtoPost roleDtoPost,
                                                 @PathVariable long id){
         adminService.addRoleToUser(roleDtoPost, id);
         return ResponseEntity.ok("Role " + roleDtoPost.getRole() + " add to User");
