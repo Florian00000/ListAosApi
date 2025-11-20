@@ -49,6 +49,9 @@ public class UserService implements UserDetailsService {
     }
 
     public TokenDtoGet registerUser(UserDtoPost dtoPost){
+        if (userRepository.existsByEmailIgnoreCase(dtoPost.getEmail())){
+            throw new IllegalArgumentException("Email already used");
+        }
         if (createUser(dtoPost)){
             long id = getIdByEmail(dtoPost.getEmail());
             TokenDtoGet dtoGet = TokenDtoGet.builder()
