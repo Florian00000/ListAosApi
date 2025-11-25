@@ -19,6 +19,12 @@ public class AuthenticationResource {
     AuthenticationClient authenticationClient;
 
     @POST
+    @Path("/register")
+    public Response registerUser(String jsonBody){
+        return authenticationClient.registerUser(jsonBody);
+    }
+
+    @POST
     @Path("/login")
     public Response loginUser(String jsonBody){
         return authenticationClient.loginUser(jsonBody);

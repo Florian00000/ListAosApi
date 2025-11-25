@@ -10,11 +10,15 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @Path("/api/auth")
 @RegisterRestClient(configKey = "security-service")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public interface AuthenticationClient {
 
     @POST
+    @Path("/register")
+    Response registerUser(String jsonBody);
+
+    @POST
     @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     Response loginUser(String jsonBody);
 }
