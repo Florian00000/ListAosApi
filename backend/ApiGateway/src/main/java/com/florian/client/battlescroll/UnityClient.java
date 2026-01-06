@@ -7,9 +7,9 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @Path("/api/units")
 @RegisterRestClient(configKey = "battlescroll-service")
-//@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface BattleAptitudeClient {
+public interface UnityClient {
 
     @GET
     @Path("/{unityId}")
@@ -17,4 +17,8 @@ public interface BattleAptitudeClient {
 
     @GET
     Response getAllUnits();
+
+    @POST
+    @Path("/add")
+    Response addUnity(String jsonBody);
 }
