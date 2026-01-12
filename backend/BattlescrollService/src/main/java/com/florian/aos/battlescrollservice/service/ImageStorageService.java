@@ -1,6 +1,7 @@
 package com.florian.aos.battlescrollservice.service;
 
 import com.florian.aos.battlescrollservice.entity.charter.Charter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,11 +9,27 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.UUID;
 
 @Service
 public class ImageStorageService {
+
+    @Value("${app.upload-dir}")
+    private String uploadDir;
+
+    private Path getUploadPath(){
+        Path path = Paths.get(uploadDir).toAbsolutePath().normalize();
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create upload directory: " + path, e);
+        }
+        return path;
+    }
 
     public Charter saveImageToCharter (Charter charter) {
         if (charter.getImagePath() != null) {
@@ -20,7 +37,7 @@ public class ImageStorageService {
                 String imagePath = saveImageBase64(charter.getImagePath());
                 charter.setImagePath(imagePath);
             }catch (IOException e){
-                throw new IllegalArgumentException("Image path could not be saved");
+                throw new IllegalArgumentException("Image path could not be saved", e);
             }
         }
         return charter;
@@ -31,13 +48,13 @@ public class ImageStorageService {
             String imagePath = saveImage(imageFile);
             charter.setImagePath(imagePath);
         }catch (IOException e){
-            throw new IllegalArgumentException("Image path could not be saved");
+            throw new IllegalArgumentException("Image path could not be saved", e);
         }
         return charter;
     }
 
     public void deleteImage(String imagePath) {
-        String rootPath = System.getProperty("user.dir");
+        /* String rootPath = System.getProperty("user.dir");
         String directoryPath = rootPath + "/public/";
         File file = new File(directoryPath + imagePath);
         if (file.exists()) {
@@ -45,6 +62,13 @@ public class ImageStorageService {
             if (!deleted) {
                 throw new RuntimeException("Failed to delete image at path: " + imagePath);
             }
+        }
+         */
+        Path file = getUploadPath().resolve(imagePath.replace("/images/", ""));
+        try {
+            Files.deleteIfExists(file);
+        }catch (IOException e){
+            throw new RuntimeException("Failed to delete image", e);
         }
     }
 
@@ -63,7 +87,7 @@ public class ImageStorageService {
             throw new IllegalArgumentException("Image input is invalid", e);
         }
 
-        String rootPath = System.getProperty("user.dir");
+        /*String rootPath = System.getProperty("user.dir");
         String directoryPath = rootPath + "/public/images/";
         File dir = new File(directoryPath);
         if(!dir.exists() && !dir.mkdirs()){
@@ -77,26 +101,49 @@ public class ImageStorageService {
         }
         System.out.println("Image saved at: " + file.getAbsolutePath());
         return "/images/" + filename;
+         */
+        Path dir = getUploadPath();
+        Files.createDirectories(dir);
+
+        String filename = UUID.randomUUID() + ".png";
+        Path filePath = dir.resolve(filename);
+
+        Files.write(filePath, decodedBytes);
+        System.out.println("Image saved at: " + filePath);
+        return "/images/" + filename;
     }
 
     private String saveImage(MultipartFile file) throws IOException {
-        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+  /*       String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         if (originalFilename.contains("..")) {
             throw new IllegalArgumentException("Invalid file path");
         }
 
-        String rootPath = System.getProperty("user.dir"); // racine du projet
-        String directory = rootPath + "/public/images/";
+       String rootPath = System.getProperty("user.dir"); // racine du projet
+       String directory = rootPath + "/public/images/";
 
         File dir = new File(directory);
         if (!dir.exists() && !dir.mkdirs()) {
             throw new IOException("Could not create directory: " + directory);
         }
 
+
         String fileName = UUID.randomUUID().toString() + "-" + originalFilename;
         File output = new File(directory + fileName);
         file.transferTo(output);
         System.out.println("Saved image to " + output.getAbsolutePath());
+
+        return "/images/" + fileName;
+
+ */
+        String fileName = UUID.randomUUID() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
+
+        Path dir = getUploadPath();
+        Files.createDirectories(dir);
+;
+        Path output = dir.resolve(fileName);
+        file.transferTo(output);
+        System.out.println("Saved image to " + output);
 
         return "/images/" + fileName;
     }

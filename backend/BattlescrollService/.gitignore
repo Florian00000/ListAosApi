@@ -35,4 +35,4 @@ build/
 ### other ###
 .env
 
-/public/images/*
+/uploads/images/*
