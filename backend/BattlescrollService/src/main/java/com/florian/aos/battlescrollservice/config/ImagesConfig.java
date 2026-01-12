@@ -11,7 +11,7 @@ public class ImagesConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/images/**")                       // URL publique
-                .addResourceLocations("file:BattlescrollService/uploads/images/"); // dossier physique
+                .addResourceLocations("file:BattlescrollService/public/images/"); // dossier physique
     }
 }
 
