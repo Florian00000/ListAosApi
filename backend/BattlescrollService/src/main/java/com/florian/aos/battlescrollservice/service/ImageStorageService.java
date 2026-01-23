@@ -136,7 +136,7 @@ public class ImageStorageService {
         return "/images/" + fileName;
 
  */
-        String fileName = UUID.randomUUID() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = UUID.randomUUID() + ".png";
 
         Path dir = getUploadPath();
         Files.createDirectories(dir);
